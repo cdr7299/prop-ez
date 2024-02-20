@@ -1,16 +1,13 @@
-import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
-import { signOut } from "next-auth/react";
 
 import { api } from "~/trpc/server";
+import SignInButton from "~/app/_components/signInButton";
 
 export default async function Home() {
-  noStore();
   const session = await getServerAuthSession();
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
@@ -18,31 +15,25 @@ export default async function Home() {
           Welcome to <span className="text-[hsl(280,100%,70%)]">Trakr.</span>
         </h1>
 
-        <div className="flex flex-col items-center gap-2 p-6">
-          <div className="flex flex-col items-center justify-center gap-8">
-            <p className="text-center text-2xl text-white">
-              {session && <span>Logged in as {session.user?.name}</span>}
-            </p>
-            <div className="flex gap-4">
+        <div className="flex flex-col items-center gap-6 p-6">
+          {/* <div className="flex flex-col items-center justify-center gap-8"> */}
+          <p className="text-center text-2xl text-white">
+            {session && <span>Logged in as {session.user?.name}</span>}
+          </p>
+          <div className="flex gap-4">
+            <SignInButton session={session} />
+            {session && (
               <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
                 className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                href="/dashboard"
               >
-                {session ? "Sign out" : "Sign in with Google"}
+                Go to Dashboard
               </Link>
-              {session && (
-                <Link
-                  className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                  href="/dashboard"
-                >
-                  Go to Dashboard
-                </Link>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
-        <CrudShowcase />
+        {/* <CrudShowcase /> */}
       </div>
     </main>
   );
