@@ -15,12 +15,12 @@ export default async function Home() {
           Welcome to <span className="text-[hsl(280,100%,70%)]">Trakr.</span>
         </h1>
 
-        <div className="flex flex-col items-center gap-6 p-6">
+        <div className="flex flex-col items-center gap-4 p-6">
           {/* <div className="flex flex-col items-center justify-center gap-8"> */}
           <p className="text-center text-2xl text-white">
             {session && <span>Logged in as {session.user?.name}</span>}
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-col gap-8">
             <SignInButton session={session} />
             {session && (
               <Link
