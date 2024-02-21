@@ -2,6 +2,7 @@
 
 import type { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
+import { Button } from "~/components/ui/button";
 
 const SignInButton = ({ session }: { session: Session | null }) => {
   const handleAuth = async () => {
@@ -14,12 +15,9 @@ const SignInButton = ({ session }: { session: Session | null }) => {
     }
   };
   return (
-    <button
-      onClick={handleAuth}
-      className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-    >
+    <Button onClick={handleAuth} variant={"secondary"}>
       {session ? "Sign Out" : "Sign in with Google"}
-    </button>
+    </Button>
   );
 };
 
