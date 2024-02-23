@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 // app/prisma/seed.ts
 import {
   type Locations,
@@ -38,7 +39,7 @@ async function main() {
   for (let i = 0; i < amountOfCategories; i++) {
     const categories: Category = {
       id: faker.string.uuid(),
-      name: categoryNames[i],
+      name: categoryNames[i] ?? "",
     };
 
     seedCategories.push(categories);
@@ -53,7 +54,7 @@ async function main() {
   for (let i = 0; i < amountOfLocations; i++) {
     const location: Locations = {
       id: faker.string.uuid(),
-      name: locationNames[i],
+      name: locationNames[i] ?? "",
     };
 
     seedLocations.push(location);
@@ -84,8 +85,8 @@ async function main() {
       floors: faker.number.int({ min: 0, max: 3 }),
       area: faker.number.float({ min: 200, max: 1200 }),
       priority: null,
-      locationId: locationIds[randLoc],
-      categoryId: categoryId[randCat],
+      locationId: locationIds[randLoc] ?? "",
+      categoryId: categoryId[randCat] ?? "",
       brokerName: faker.person.fullName(),
       statusId: null,
     };
