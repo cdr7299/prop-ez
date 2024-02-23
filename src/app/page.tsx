@@ -1,34 +1,31 @@
 import Link from "next/link";
 
-import { CreatePost } from "~/app/_components/create-post";
+// import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 
-import { api } from "~/trpc/server";
+// import { api } from "~/trpc/server";
 import SignInButton from "~/app/_components/signInButton";
+import { Button } from "~/components/ui/button";
 
 export default async function Home() {
   const session = await getServerAuthSession();
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      <div className="container flex max-w-screen-2xl flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Welcome to <span className="text-[hsl(280,100%,70%)]">Trakr.</span>
+          Welcome to <span className="text-accent">Trakr.</span>
         </h1>
 
-        <div className="flex flex-col items-center gap-4 p-6">
-          {/* <div className="flex flex-col items-center justify-center gap-8"> */}
-          <p className="text-center text-2xl text-white">
+        <div className="flex flex-col items-center gap-6 p-6">
+          <p className="text-center text-xl">
             {session && <span>Logged in as {session.user?.name}</span>}
           </p>
           <div className="flex flex-col gap-8">
-            <SignInButton session={session} />
+            {!session && <SignInButton />}
             {session && (
-              <Link
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                href="/dashboard"
-              >
-                Go to Dashboard
-              </Link>
+              <Button asChild>
+                <Link href="/dashboard">Go to Dashboard</Link>
+              </Button>
             )}
           </div>
         </div>
@@ -39,21 +36,21 @@ export default async function Home() {
   );
 }
 
-async function CrudShowcase() {
-  const session = await getServerAuthSession();
-  if (!session?.user) return null;
+// async function CrudShowcase() {
+//   const session = await getServerAuthSession();
+//   if (!session?.user) return null;
 
-  const latestPost = await api.post.getLatest.query();
+//   const latestPost = await api.post.getLatest.query();
 
-  return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
+//   return (
+//     <div className="w-full max-w-xs">
+//       {latestPost ? (
+//         <p className="truncate">Your most recent post: {latestPost.name}</p>
+//       ) : (
+//         <p>You have no posts yet.</p>
+//       )}
 
-      <CreatePost />
-    </div>
-  );
-}
+//       <CreatePost />
+//     </div>
+//   );
+// }
