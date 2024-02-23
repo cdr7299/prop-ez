@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { ThemeProvider } from "./_providers/ThemeProvider";
+import { ThemeProvider } from "../lib/_providers/ThemeProvider";
 import Navbar from "~/components/navbar";
 import { getServerAuthSession } from "~/server/auth";
 

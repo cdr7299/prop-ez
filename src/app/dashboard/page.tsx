@@ -1,5 +1,5 @@
-import { columns } from "./_components/columns";
-import { DataTable } from "./_components/data-table";
+import { columns } from "./_components/properties-table/columns";
+import { DataTable } from "./_components/properties-table/data-table";
 import { type Metadata } from "next";
 import { api } from "~/trpc/server";
 import { Button } from "~/components/ui/button";
