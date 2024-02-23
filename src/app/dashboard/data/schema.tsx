@@ -7,15 +7,12 @@ export const taskSchema = z.object({
   status: z.string(),
   label: z.string(),
   priority: z.string(),
-  // length: z.number(),
-  // width: z.number(),
-  // area: z.number(),
-  // floors: z.number(),
-  // location: z.string(),
 });
+
 export const propertySchema = z.object({
   id: z.string(),
-  title: z.string(),
+  title: z.string().nullable(),
+  address: z.string(),
   createdAt: z.date(),
   length: z.number().nullable(),
   width: z.number().nullable(),
@@ -23,14 +20,6 @@ export const propertySchema = z.object({
   floors: z.number().nullable(),
   location: z.string().nullable(),
   category: z.string().nullable(),
-  // status: z.string(),
-  // label: z.string(),
-  // priority: z.string(),
-  // length: z.number(),
-  // width: z.number(),
-  // area: z.number(),
-  // floors: z.number(),
-  // location: z.string(),
 });
 
 export type Task = z.infer<typeof taskSchema>;

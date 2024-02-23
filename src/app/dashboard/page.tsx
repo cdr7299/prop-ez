@@ -6,6 +6,8 @@ import { Button } from "~/components/ui/button";
 import { getServerAuthSession } from "~/server/auth";
 import Link from "next/link";
 import { Settings } from "lucide-react";
+import { AddProperty } from "./_components/add-property/add-property";
+import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
 
 export const metadata: Metadata = {
   title: "Properties",
@@ -15,8 +17,8 @@ export const metadata: Metadata = {
 export default async function Dashboard() {
   const locations = await api.locations.getLatest.query();
   const categories = await api.categories.getLatest.query();
-
   const properties = await api.properties.getLatest.query();
+  console.log(properties);
   const propertiesFinal = properties.map((item) => ({
     ...item,
     category:
@@ -25,10 +27,11 @@ export default async function Dashboard() {
     location:
       locations.find((location) => item.locationId === location.id)?.name ?? "",
   }));
+
   const session = await getServerAuthSession();
   return (
     <div className="size-full max-w-screen-2xl">
-      <div className="flex h-full flex-1 flex-col space-y-8 px-4 py-8 md:flex">
+      <div className="flex min-h-full flex-1 flex-col space-y-8 px-4 py-8 md:flex">
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-bold tracking-tight">
@@ -39,7 +42,7 @@ export default async function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="default">Add Property</Button>
+            <AddProperty />
             {/* <Button variant="secondary">Manage Categories</Button>
             <Button variant="secondary">Manage Locations</Button>
             <Button variant="secondary">Manage Statues</Button> */}
@@ -50,7 +53,13 @@ export default async function Dashboard() {
             </Button>
           </div>
         </div>
-        <DataTable data={propertiesFinal} columns={columns} />
+        <DashboardCards />
+        <DataTable
+          data={propertiesFinal}
+          columns={columns}
+          locations={locations}
+          categories={categories}
+        />
       </div>
     </div>
   );
