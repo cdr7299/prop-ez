@@ -37,6 +37,9 @@ const formSchema = z.object({
   categoryId: z.string().nullable(),
   locationId: z.string().nullable(),
   brokerName: z.string(),
+  pricePerSqFt: z.number(),
+  calculatedPrice: z.number(),
+  rent: z.number().nullable(),
 });
 
 export function AddPropertyForm({
@@ -53,15 +56,24 @@ export function AddPropertyForm({
       title: "",
     },
   });
-  console.log(form.getValues());
   const watchLength = form.watch("length");
   const watchWidth = form.watch("width");
+  const watchPricePerSqFt = form.watch("pricePerSqFt");
 
   useEffect(() => {
     if (watchLength && watchWidth) {
       form.setValue("area", form.getValues("length") * form.getValues("width"));
     }
-  }, [watchLength, watchWidth, form]);
+
+    if (watchLength && watchWidth && watchPricePerSqFt) {
+      form.setValue(
+        "calculatedPrice",
+        form.getValues("length") *
+          form.getValues("width") *
+          form.getValues("pricePerSqFt"),
+      );
+    }
+  }, [watchLength, watchWidth, form, watchPricePerSqFt]);
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -123,7 +135,6 @@ export function AddPropertyForm({
                     setValue={(val) => form.setValue("locationId", val)}
                   />
                 </FormControl>
-                <FormDescription>Set a general location</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -145,7 +156,6 @@ export function AddPropertyForm({
                     }}
                   />
                 </FormControl>
-                <FormDescription>Categorise property</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -172,7 +182,7 @@ export function AddPropertyForm({
             name="length"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Length(feet)</FormLabel>
+                <FormLabel>Length(ft.)</FormLabel>
                 <FormControl>
                   <Input placeholder="ex. 50" type="number" {...field} />
                 </FormControl>
@@ -185,7 +195,7 @@ export function AddPropertyForm({
             name="width"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Width(feet)</FormLabel>
+                <FormLabel>Width(ft.)</FormLabel>
                 <FormControl>
                   <Input placeholder="ex. 30" type="number" {...field} />
                 </FormControl>
@@ -198,9 +208,9 @@ export function AddPropertyForm({
             name="area"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Area(feet)</FormLabel>
+                <FormLabel>Area(sq ft.)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Length X Width" {...field} disabled />
+                  <Input placeholder="Length x Width" {...field} disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -224,6 +234,38 @@ export function AddPropertyForm({
             </FormItem>
           )}
         />
+        <div className="flex justify-between gap-4">
+          <FormField
+            control={form.control}
+            name="pricePerSqFt"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Price(per sq ft.)</FormLabel>
+                <FormControl>
+                  <Input placeholder="ex. 2" type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="calculatedPrice"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Property Price</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Length x Width x Price(sq.ft)"
+                    {...field}
+                    disabled
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

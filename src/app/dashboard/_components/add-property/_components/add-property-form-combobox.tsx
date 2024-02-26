@@ -71,7 +71,7 @@ export function AddPropertyCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder={placeholder} />
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandGroup>
             {data.map((item) => (

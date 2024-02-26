@@ -1,33 +1,18 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const propertiesRouter = createTRPCRouter({
-  //   hello: publicProcedure
-  //     .input(z.object({ text: z.string() }))
-  //     .query(({ input }) => {
-  //       return {
-  //         greeting: `Hello ${input.text}`,
-  //       };
-  //     }),
-
-  //   create: protectedProcedure
-  //     .input(z.object({ name: z.string().min(1) }))
-  //     .mutation(async ({ ctx, input }) => {
-  //       // simulate a slow db call
-  //       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  //       return ctx.db.post.create({
-  //         data: {
-  //           name: input.name,
-  //           createdBy: { connect: { id: ctx.session.user.id } },
-  //         },
-  //       });
-  //     }),
+  getPropertiesByLocation: protectedProcedure
+    .input(z.object({ locationId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.propertyItem.findMany({
+        where: {
+          locationId: input.locationId,
+          createdBy: { id: ctx.session.user.id },
+        },
+      });
+    }),
 
   getLatest: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.findMany({

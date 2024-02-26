@@ -30,10 +30,6 @@ export const locationsRouter = createTRPCRouter({
   //     }),
 
   getLatest: protectedProcedure.query(({ ctx }) => {
-    // return ctx.db.locations.findMany({
-    //   orderBy: { createdAt: "desc" },
-    //   where: { createdBy: { id: ctx.session.user.id } },
-    // });
     return ctx.db.locations.findMany();
   }),
 

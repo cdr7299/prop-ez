@@ -21,6 +21,8 @@ export default async function Dashboard() {
   console.log(properties);
   const propertiesFinal = properties.map((item) => ({
     ...item,
+    area: (item.length ?? 0) * (item.width ?? 0),
+    price: (item.pricePerSqFt ?? 0) * (item.length ?? 0) * (item.width ?? 0),
     category:
       categories.find((category) => category.id === item.categoryId)?.name ??
       "",

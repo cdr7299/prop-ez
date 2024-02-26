@@ -79,17 +79,17 @@ async function main() {
       title: faker.word.words({ count: { min: 2, max: 4 } }),
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
-      createdById: "clsyxob5h0000pr6ajolb5kyt",
+      createdById: "clsz72tjd0000q74sjh6qs3c4",
       length: faker.number.float({ min: 10, max: 40 }),
       width: faker.number.float({ min: 20, max: 30 }),
       floors: faker.number.int({ min: 0, max: 3 }),
-      area: faker.number.float({ min: 200, max: 1200 }),
       priority: null,
       address: faker.location.streetAddress(),
       locationId: locationIds[randLoc] ?? "",
       categoryId: categoryId[randCat] ?? "",
       brokerName: faker.person.fullName(),
       statusId: null,
+      pricePerSqFt: faker.number.float({ min: 1000, max: 10000 }),
     };
 
     seedProperties.push(property);

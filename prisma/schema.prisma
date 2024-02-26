@@ -98,25 +98,25 @@ model UserPreference {
 }
 
 model PropertyItem {
-  id          String     @id @default(cuid())
-  title       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  address     String     @unique
-  createdBy   User       @relation(fields: [createdById], references: [id])
-  createdById String
-  length      Float?
-  width       Float?
-  floors      Int
-  area        Float?
-  Category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  priority    Priority?
-  status      Status?    @relation(fields: [statusId], references: [id])
-  statusId    String?
-  location    Locations? @relation(fields: [locationId], references: [id])
-  locationId  String?
-  brokerName  String?
+  id           String    @id @default(cuid())
+  title        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  address      String    @unique
+  createdBy    User      @relation(fields: [createdById], references: [id])
+  createdById  String
+  length       Float?
+  width        Float?
+  floors       Int
+  Category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId   String
+  priority     Priority?
+  status       Status?   @relation(fields: [statusId], references: [id])
+  statusId     String?
+  location     Locations @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  locationId   String
+  brokerName   String?
+  pricePerSqFt Float?
 }
 
 model Locations {

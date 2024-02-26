@@ -62,6 +62,40 @@ export const columns: ColumnDef<PropertyItem>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "price",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Price" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-full">
+        {new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumSignificantDigits: 3,
+        }).format(row.getValue("price"))}
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "pricePerSqFt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Price per Sq Ft." />
+    ),
+    cell: ({ row }) => (
+      <div className="w-full">
+        {new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumSignificantDigits: 1,
+        }).format(row.getValue("pricePerSqFt"))}
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
     accessorKey: "category",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
@@ -76,7 +110,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "area",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Area" />
+      <DataTableColumnHeader column={column} title="Area(sq ft.)" />
     ),
     cell: ({ row }) => (
       <div className="w-full">{Number(row.getValue("area")).toFixed(2)}</div>
