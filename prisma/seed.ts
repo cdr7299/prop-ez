@@ -70,21 +70,22 @@ async function main() {
   // add properties
   const locationIds = seedLocations.map((item) => item.id);
   const categoryId = seedCategories.map((item) => item.id);
-  const amountOfProperties = 9;
+  const amountOfProperties = 100;
   for (let i = 0; i < amountOfProperties; i++) {
     const randLoc = Math.floor(Math.random() * seedLocations.length);
     const randCat = Math.floor(Math.random() * seedCategories.length);
     const property: PropertyItem = {
       id: faker.string.uuid(),
-      title: "Some property info",
+      title: faker.word.words({ count: { min: 2, max: 4 } }),
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
-      createdById: "clsydlfsk000pnw65emc7mtvy",
+      createdById: "clsyxob5h0000pr6ajolb5kyt",
       length: faker.number.float({ min: 10, max: 40 }),
       width: faker.number.float({ min: 20, max: 30 }),
       floors: faker.number.int({ min: 0, max: 3 }),
       area: faker.number.float({ min: 200, max: 1200 }),
       priority: null,
+      address: faker.location.streetAddress(),
       locationId: locationIds[randLoc] ?? "",
       categoryId: categoryId[randCat] ?? "",
       brokerName: faker.person.fullName(),

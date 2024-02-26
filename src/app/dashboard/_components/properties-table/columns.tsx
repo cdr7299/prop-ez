@@ -5,9 +5,6 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { Badge } from "~/components/ui/badge";
 import { Checkbox } from "~/components/ui/checkbox";
-
-import { labels, priorities, statuses } from "../../data/data";
-// import { type Task } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type PropertyItem } from "../../data/schema";
@@ -43,15 +40,47 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Location" />
     ),
     cell: ({ row }) => <div className="w-full">{row.getValue("location")}</div>,
+    filterFn: (row, id, value: string) => {
+      // should infer value : string
+      return value.includes(row.getValue(id));
+    },
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "address",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Address" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex w-full gap-1">
+        <Badge variant="default">{row.original.category}</Badge>
+        {row.getValue("address")}
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ row }) => <div className="w-full">{row.getValue("category")}</div>,
+    filterFn: (row, id, value: string) => {
+      return value.includes(row.getValue(id));
+    },
+    enableSorting: false,
+    enableHiding: true,
   },
   {
     accessorKey: "area",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Area" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("area")}</div>,
+    cell: ({ row }) => (
+      <div className="w-full">{Number(row.getValue("area")).toFixed(2)}</div>
+    ),
     enableSorting: true,
     enableHiding: true,
   },
@@ -60,7 +89,9 @@ export const columns: ColumnDef<PropertyItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Length" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("length")}</div>,
+    cell: ({ row }) => (
+      <div className="w-full">{Number(row.getValue("length")).toFixed(1)}</div>
+    ),
     enableSorting: true,
     enableHiding: true,
   },
@@ -69,7 +100,9 @@ export const columns: ColumnDef<PropertyItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Width" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("width")}</div>,
+    cell: ({ row }) => (
+      <div className="w-full">{Number(row.getValue("width")).toFixed(1)}</div>
+    ),
     enableSorting: true,
     enableHiding: true,
   },
@@ -88,24 +121,20 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Broker Name" />
     ),
     cell: ({ row }) => (
-      <div className="w-full">{row.getValue("brokerName")}</div>
+      <div className="max-w-[150px] truncate">{row.getValue("brokerName")}</div>
     ),
     enableSorting: true,
     enableHiding: true,
   },
-
   {
     accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.title);
-
       return (
         <div className="flex space-x-2">
-          <Badge variant="outline">{row.original.category}</Badge>
-          <span className="max-w-[500px] truncate font-medium">
+          <span className="max-w-[150px] truncate font-medium">
             {row.getValue("title")}
           </span>
         </div>

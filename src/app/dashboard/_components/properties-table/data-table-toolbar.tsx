@@ -9,15 +9,28 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 import { priorities, statuses } from "../../data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { type Category, type Locations } from "@prisma/client";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  locations: Locations[];
+  categories: Category[];
 }
 
 export function DataTableToolbar<TData>({
   table,
+  locations,
+  categories,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const locationsOptions = locations?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
+  const categoryOptions = categories?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -33,16 +46,16 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             column={table.getColumn("location")}
             title="Locations"
-            options={statuses}
+            options={locationsOptions || []}
           />
         )}
-        {/* {table.getColumn("priority") && (
+        {table.getColumn("category") && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
+            column={table.getColumn("category")}
+            title="Category"
+            options={categoryOptions || []}
           />
-        )} */}
+        )}
         {isFiltered && (
           <Button
             variant="ghost"
