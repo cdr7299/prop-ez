@@ -15,12 +15,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboard() {
-  const locations = await api.locations.getLatest.query();
-  const categories = await api.categories.getLatest.query();
-  const properties = await api.properties.getLatest.query();
+  const locations = await api.locations.list.query();
+  const categories = await api.categories.list.query();
+  const properties = await api.properties.list.query();
   console.log(properties);
   const propertiesFinal = properties.map((item) => ({
     ...item,
+    area: (item.length ?? 0) * (item.width ?? 0),
+    price: (item.pricePerSqFt ?? 0) * (item.length ?? 0) * (item.width ?? 0),
     category:
       categories.find((category) => category.id === item.categoryId)?.name ??
       "",

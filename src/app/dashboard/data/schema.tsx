@@ -20,6 +20,7 @@ export const propertySchema = z.object({
   floors: z.number().nullable(),
   location: z.string().nullable(),
   category: z.string().nullable(),
+  pricePerSqFt: z.number().nullable(),
 });
 
 export type Task = z.infer<typeof taskSchema>;

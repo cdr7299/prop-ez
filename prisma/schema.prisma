@@ -86,6 +86,8 @@ model User {
   properties     PropertyItem[]
   role           Role            @default(BASIC)
   UserPreference UserPreference?
+  Locations      Locations[]
+  Category       Category[]
 
   @@index([email])
 }
@@ -98,37 +100,44 @@ model UserPreference {
 }
 
 model PropertyItem {
-  id          String     @id @default(cuid())
-  title       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  address     String     @unique
-  createdBy   User       @relation(fields: [createdById], references: [id])
-  createdById String
-  length      Float?
-  width       Float?
-  floors      Int
-  area        Float?
-  Category    Category?  @relation(fields: [categoryId], references: [id])
-  categoryId  String?
-  priority    Priority?
-  status      Status?    @relation(fields: [statusId], references: [id])
-  statusId    String?
-  location    Locations? @relation(fields: [locationId], references: [id])
-  locationId  String?
-  brokerName  String?
+  id           String    @id @default(cuid())
+  title        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  address      String    @unique
+  createdBy    User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById  String
+  length       Float?
+  width        Float?
+  floors       Int
+  Category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId   String
+  priority     Priority?
+  status       Status?   @relation(fields: [statusId], references: [id])
+  statusId     String?
+  location     Locations @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  locationId   String
+  brokerName   String?
+  pricePerSqFt Float?
 }
+
+// TODO use createdBy rather than user & user userId
 
 model Locations {
   id         String         @id @default(cuid())
   name       String         @unique
   properties PropertyItem[]
+  user       User           @relation(fields: [userId], references: [id])
+  userId     String
 }
 
+// TODO use createdBy rather than user & user userId
 model Category {
   id         String         @id @default(cuid())
   name       String         @unique
   properties PropertyItem[]
+  user       User           @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 model Status {
