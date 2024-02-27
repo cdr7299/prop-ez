@@ -18,6 +18,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { AddPropertyCombobox } from "./_components/add-property-form-combobox";
 import { type Locations, type Category } from "@prisma/client";
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import DotLoader from "~/components/dot-loader";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -27,25 +31,24 @@ const formSchema = z.object({
   width: z.number(),
   area: z.number(),
   floors: z.number().int({ message: "Floors can be integers only" }),
-  location: z.string().min(1),
   address: z.string().min(5),
-  category: z.string().min(1),
-  categoryId: z.string().nullable(),
-  locationId: z.string().nullable(),
+  categoryId: z.string(),
+  locationId: z.string(),
   brokerName: z.string(),
   pricePerSqFt: z.number(),
   calculatedPrice: z.number(),
-  rent: z.number().nullable(),
 });
 
 export function AddPropertyForm({
   categories,
   locations,
+  setOpen,
 }: {
   categories: Category[];
   locations: Locations[];
+  setOpen: (arg: boolean) => void;
 }) {
-  // 1. Define your form.
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,11 +74,18 @@ export function AddPropertyForm({
     }
   }, [watchLength, watchWidth, form, watchPricePerSqFt]);
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const { isLoading, mutateAsync } = api.properties.create.useMutation({
+    onError: () => {
+      toast.error("Failed to add property :(");
+    },
+    onSuccess: () => {
+      setOpen(false);
+      toast.success("Successfull added new property!");
+      router.refresh();
+    },
+  });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await mutateAsync(values);
   }
 
   return (
@@ -147,7 +157,6 @@ export function AddPropertyForm({
                     data={categories}
                     value={field.value}
                     setValue={(val) => {
-                      console.log(val);
                       form.setValue("categoryId", val);
                     }}
                   />
@@ -167,7 +176,12 @@ export function AddPropertyForm({
               <FormItem>
                 <FormLabel>Number of Floors</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex. 2" type="number" {...field} />
+                  <Input
+                    placeholder="ex. 2"
+                    type="number"
+                    {...field}
+                    onChange={(event) => field.onChange(+event.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -180,7 +194,12 @@ export function AddPropertyForm({
               <FormItem>
                 <FormLabel>Length(ft.)</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex. 50" type="number" {...field} />
+                  <Input
+                    placeholder="ex. 50"
+                    type="number"
+                    {...field}
+                    onChange={(event) => field.onChange(+event.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -193,7 +212,12 @@ export function AddPropertyForm({
               <FormItem>
                 <FormLabel>Width(ft.)</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex. 30" type="number" {...field} />
+                  <Input
+                    placeholder="ex. 30"
+                    type="number"
+                    {...field}
+                    onChange={(event) => field.onChange(+event.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -206,7 +230,7 @@ export function AddPropertyForm({
               <FormItem>
                 <FormLabel>Area(sq ft.)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Length x Width" {...field} disabled />
+                  <Input placeholder="Length x Width" disabled {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -238,7 +262,12 @@ export function AddPropertyForm({
               <FormItem className="w-full">
                 <FormLabel>Price(per sq ft.)</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex. 2" type="number" {...field} />
+                  <Input
+                    placeholder="ex. 2"
+                    type="number"
+                    {...field}
+                    onChange={(event) => field.onChange(+event.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -253,8 +282,8 @@ export function AddPropertyForm({
                 <FormControl>
                   <Input
                     placeholder="Length x Width x Price(sq.ft)"
-                    {...field}
                     disabled
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -262,7 +291,10 @@ export function AddPropertyForm({
             )}
           />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">
+          {!isLoading && "Submit"}
+          {isLoading && <DotLoader />}
+        </Button>
       </form>
     </Form>
   );

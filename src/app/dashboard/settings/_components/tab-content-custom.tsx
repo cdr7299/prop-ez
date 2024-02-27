@@ -44,54 +44,60 @@ export default function TabsContentLocations({
     setSelectedItem({ id: itemId, name: itemName });
   };
 
-  const deleteLocationItem = api.locations.delete.useMutation({
-    async onSuccess(params) {
-      const itemName = data.find((item) => item.id === params.id);
-      toast.success(`Deleted ${itemName?.name} location successfully`);
-      router.refresh();
-    },
-  });
+  const { isLoading: isDeletingLocations, mutateAsync: deleteLocationsAsync } =
+    api.locations.delete.useMutation({
+      async onSuccess(params) {
+        const itemName = data.find((item) => item.id === params.id);
+        toast.success(`Deleted ${itemName?.name} location successfully`);
+        router.refresh();
+      },
+    });
 
-  const deleteCategoryItem = api.categories.delete.useMutation({
+  const {
+    isLoading: isDeletingCategories,
+    mutateAsync: deleteCategoriesAsync,
+  } = api.categories.delete.useMutation({
     async onSuccess(params) {
       const itemName = data.find((item) => item.id === params.id);
       toast.success(`Deleted ${itemName?.name} category successfully`);
       router.refresh();
     },
   });
-  const addLocationItem = api.locations.create.useMutation({
-    async onError(params) {
-      toast.error(
-        `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
-      );
-    },
-    async onSuccess(params) {
-      toast.success(`Added ${params.name} successfully`);
-      setShowAddDialog(false);
-      router.refresh();
-    },
-  });
+  const { isLoading: isAddingLocations, mutateAsync: addLocationsAsync } =
+    api.locations.create.useMutation({
+      async onError(params) {
+        toast.error(
+          `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
+        );
+      },
+      async onSuccess(params) {
+        toast.success(`Added ${params.name} successfully`);
+        setShowAddDialog(false);
+        router.refresh();
+      },
+    });
 
-  const addCategoryItem = api.categories.create.useMutation({
-    async onError(params) {
-      toast.error(
-        `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
-      );
-    },
-    async onSuccess(params) {
-      toast.success(`Added ${params.name} successfully`);
-      setShowAddDialog(false);
-      router.refresh();
-    },
-  });
+  const { isLoading: isAddingCategories, mutateAsync: addCategoriesAsync } =
+    api.categories.create.useMutation({
+      async onError(params) {
+        toast.error(
+          `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
+        );
+      },
+      async onSuccess(params) {
+        toast.success(`Added ${params.name} successfully`);
+        setShowAddDialog(false);
+        router.refresh();
+      },
+    });
 
   const onDelete = async (accessor: "locationId" | "categoryId") => {
     if (accessor === "locationId")
-      await deleteLocationItem.mutateAsync({
+      await deleteLocationsAsync({
         locationId: selectedItem?.id ?? "",
       });
     else
-      await deleteCategoryItem.mutateAsync({
+      await deleteCategoriesAsync({
         categoryId: selectedItem?.id ?? "",
       });
   };
@@ -101,11 +107,11 @@ export default function TabsContentLocations({
     formValues: { name: string },
   ) => {
     if (accessor === "locationId")
-      await addLocationItem.mutateAsync({
+      await addLocationsAsync({
         name: formValues.name,
       });
     else
-      await addCategoryItem.mutateAsync({
+      await addCategoriesAsync({
         name: formValues.name,
       });
   };
@@ -140,9 +146,11 @@ export default function TabsContentLocations({
         setOpen={setShowAlert}
         affectedProperties={affectedProperties}
         selectedItemName={selectedItem?.name ?? ""}
+        isDeleting={isDeletingLocations || isDeletingCategories}
         onDelete={() => onDelete(accessor)}
       />
       <AddItemDialog
+        isAdding={isAddingLocations || isAddingCategories}
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}

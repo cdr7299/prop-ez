@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import DotLoader from "~/components/dot-loader";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -24,12 +25,14 @@ const formSchema = z.object({
 export function AddItemForm({
   data,
   onSubmit,
+  isAdding,
 }: {
   data: {
     id: string;
     name: string;
   }[];
   onSubmit: (args: { name: string }) => void;
+  isAdding: boolean;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,10 +56,8 @@ export function AddItemForm({
           name="name"
           rules={{
             required: true,
-            validate: (value, formValues) => {
-              console.log("i raaaan", formValues, value);
+            validate: (value) => {
               const hasDuplicate = data.find((item) => item.name === value);
-
               return !hasDuplicate || "Name already exists";
             },
           }}
@@ -70,7 +71,10 @@ export function AddItemForm({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">
+          {!isAdding && "Submit"}
+          {isAdding && <DotLoader />}
+        </Button>
       </form>
     </Form>
   );

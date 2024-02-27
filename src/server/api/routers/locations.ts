@@ -25,4 +25,12 @@ export const locationsRouter = createTRPCRouter({
       where: { user: { id: ctx.session.user.id } },
     });
   }),
+  listWithProperties: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.locations.findMany({
+      where: { user: { id: ctx.session.user.id } },
+      include: {
+        properties: true,
+      },
+    });
+  }),
 });

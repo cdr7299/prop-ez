@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -8,13 +10,19 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { AddPropertyForm } from "./add-property-form";
-import { api } from "~/trpc/server";
+import { useState } from "react";
+import { type Locations, type Category } from "@prisma/client";
 
-export async function AddProperty() {
-  const categories = await api.categories.list.query();
-  const locations = await api.locations.list.query();
+export function AddProperty({
+  categories,
+  locations,
+}: {
+  categories: Category[];
+  locations: Locations[];
+}) {
+  const [open, setOpen] = useState<boolean>(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default">Add Property</Button>
       </DialogTrigger>
@@ -25,7 +33,11 @@ export async function AddProperty() {
             Add a new property here, press submit to save it.
           </DialogDescription>
         </DialogHeader>
-        <AddPropertyForm categories={categories} locations={locations} />
+        <AddPropertyForm
+          categories={categories}
+          locations={locations}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );
