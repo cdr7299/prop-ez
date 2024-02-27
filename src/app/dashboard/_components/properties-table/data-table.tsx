@@ -82,6 +82,7 @@ export function DataTable<TData, TValue>({
         table={table}
         locations={locations}
         categories={categories}
+        setRowSelection={setRowSelection}
       />
       <div className="rounded-md border border-primary">
         <Table>

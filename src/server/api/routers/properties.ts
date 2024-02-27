@@ -3,6 +3,17 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const propertiesRouter = createTRPCRouter({
+  deleteMany: protectedProcedure
+    .input(z.array(z.string()))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.propertyItem.deleteMany({
+        where: {
+          id: {
+            in: input,
+          },
+        },
+      });
+    }),
   delete: protectedProcedure
     .input(z.object({ propertyId: z.string().min(1) }))
     .mutation(({ ctx, input }) => {

@@ -9,19 +9,27 @@ import { DataTableViewOptions } from "./data-table-view-options";
 
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { type Category, type Locations } from "@prisma/client";
+import AlertDialogDeleteProperty from "../alert-dialog-delete-property";
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   locations: Locations[];
   categories: Category[];
+  setRowSelection: (obj: Array<any>) => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
   locations,
   categories,
+  setRowSelection,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const router = useRouter();
   const locationsOptions = locations?.map((item) => ({
     label: item.name,
     value: item.name,
@@ -30,6 +38,23 @@ export function DataTableToolbar<TData>({
     label: item.name,
     value: item.name,
   }));
+  const [open, setOpen] = useState<boolean>(false);
+  const selectedRows = table.getSelectedRowModel().flatRows;
+  console.log(selectedRows);
+  const { mutateAsync } = api.properties.deleteMany.useMutation({
+    onSuccess: (params) => {
+      toast.success(`Succesfully deleted ${params.count} properties`);
+      router.refresh();
+      setRowSelection({});
+    },
+  });
+
+  const onDeleteMultiple = async () => {
+    console.log(selectedRows);
+    const propertyIds = selectedRows.map((row) => row.original.id as string);
+    await mutateAsync(propertyIds);
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -66,7 +91,28 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center gap-2">
+        {selectedRows.length > 0 && (
+          <Button
+            variant="destructive"
+            size="sm"
+            className="h-8 lg:flex"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Delete Multiple items
+          </Button>
+        )}
+        <DataTableViewOptions table={table} />
+      </div>
+      <AlertDialogDeleteProperty
+        open={open}
+        setOpen={setOpen}
+        isDeleting={false}
+        onDelete={onDeleteMultiple}
+        count={selectedRows.length}
+      />
     </div>
   );
 }
