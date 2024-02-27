@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboard() {
-  const locations = await api.locations.getLatest.query();
-  const categories = await api.categories.getLatest.query();
-  const properties = await api.properties.getLatest.query();
+  const locations = await api.locations.list.query();
+  const categories = await api.categories.list.query();
+  const properties = await api.properties.list.query();
   console.log(properties);
   const propertiesFinal = properties.map((item) => ({
     ...item,

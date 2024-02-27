@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
+import { Toaster } from "~/components/ui/sonner";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "../lib/_providers/ThemeProvider";
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <TRPCReactProvider>
             <Navbar session={session} />
             {children}
+            <Toaster duration={3000} />
           </TRPCReactProvider>
         </ThemeProvider>
       </body>

@@ -11,8 +11,8 @@ import { AddPropertyForm } from "./add-property-form";
 import { api } from "~/trpc/server";
 
 export async function AddProperty() {
-  const categories = await api.categories.getLatest.query();
-  const locations = await api.locations.getLatest.query();
+  const categories = await api.categories.list.query();
+  const locations = await api.locations.list.query();
   return (
     <Dialog>
       <DialogTrigger asChild>

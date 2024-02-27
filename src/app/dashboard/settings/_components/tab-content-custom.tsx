@@ -7,12 +7,16 @@ import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
 import AlertDialogCustom from "./alert-dialog-custom";
 import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { AddItemDialog } from "./add-item-dialog";
 
 export default function TabsContentLocations({
   value,
   data,
   properties,
   accessor,
+  label,
 }: {
   value: string;
   data: {
@@ -20,14 +24,16 @@ export default function TabsContentLocations({
     name: string;
   }[];
   properties: PropertyItem[];
+  label: string;
   accessor: "locationId" | "categoryId";
 }) {
+  const router = useRouter();
   const [affectedProperties, setAffectedProperties] = useState<PropertyItem[]>(
     [],
   );
-  // const deleteLocationMutation = api.locations.deleteTask.useMutation();
-  const [selectedItemName, setSelectedItemName] = useState<string>();
+  const [selectedItem, setSelectedItem] = useState<(typeof data)[0]>();
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
 
   const showDeleteWarning = async (itemId: string, itemName: string) => {
     const matchedProperties = properties.filter(
@@ -35,11 +41,73 @@ export default function TabsContentLocations({
     );
     setShowAlert(true);
     setAffectedProperties(matchedProperties);
-    setSelectedItemName(itemName);
+    setSelectedItem({ id: itemId, name: itemName });
   };
 
-  const onDelete = () => {
-    console.log("h");
+  const deleteLocationItem = api.locations.delete.useMutation({
+    async onSuccess(params) {
+      const itemName = data.find((item) => item.id === params.id);
+      toast.success(`Deleted ${itemName?.name} location successfully`);
+      router.refresh();
+    },
+  });
+
+  const deleteCategoryItem = api.categories.delete.useMutation({
+    async onSuccess(params) {
+      const itemName = data.find((item) => item.id === params.id);
+      toast.success(`Deleted ${itemName?.name} category successfully`);
+      router.refresh();
+    },
+  });
+  const addLocationItem = api.locations.create.useMutation({
+    async onError(params) {
+      toast.error(
+        `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
+      );
+    },
+    async onSuccess(params) {
+      toast.success(`Added ${params.name} successfully`);
+      setShowAddDialog(false);
+      router.refresh();
+    },
+  });
+
+  const addCategoryItem = api.categories.create.useMutation({
+    async onError(params) {
+      toast.error(
+        `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
+      );
+    },
+    async onSuccess(params) {
+      toast.success(`Added ${params.name} successfully`);
+      setShowAddDialog(false);
+      router.refresh();
+    },
+  });
+
+  const onDelete = async (accessor: "locationId" | "categoryId") => {
+    if (accessor === "locationId")
+      await deleteLocationItem.mutateAsync({
+        locationId: selectedItem?.id ?? "",
+      });
+    else
+      await deleteCategoryItem.mutateAsync({
+        categoryId: selectedItem?.id ?? "",
+      });
+  };
+
+  const onAdd = async (
+    accessor: "locationId" | "categoryId",
+    formValues: { name: string },
+  ) => {
+    if (accessor === "locationId")
+      await addLocationItem.mutateAsync({
+        name: formValues.name,
+      });
+    else
+      await addCategoryItem.mutateAsync({
+        name: formValues.name,
+      });
   };
 
   return (
@@ -59,16 +127,29 @@ export default function TabsContentLocations({
           </Button>
         ))}
       </div>
-      <Button className="mx-4 flex gap-4" variant="outline">
+      <Button
+        className="mx-4 flex gap-4"
+        variant="outline"
+        onClick={() => setShowAddDialog(true)}
+      >
         <PlusCircledIcon className="size-4" />
-        {`Add New ${value}`}
+        {`Add New ${label}`}
       </Button>
       <AlertDialogCustom
         open={showAlert}
         setOpen={setShowAlert}
         affectedProperties={affectedProperties}
-        selectedItemName={selectedItemName ?? ""}
-        onDelete={onDelete}
+        selectedItemName={selectedItem?.name ?? ""}
+        onDelete={() => onDelete(accessor)}
+      />
+      <AddItemDialog
+        open={showAddDialog}
+        setOpen={setShowAddDialog}
+        title={label}
+        data={data}
+        onAdd={async (formValues) => {
+          await onAdd(accessor, formValues);
+        }}
       />
     </TabsContent>
   );

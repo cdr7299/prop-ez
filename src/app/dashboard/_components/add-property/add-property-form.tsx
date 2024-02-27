@@ -17,11 +17,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { AddPropertyCombobox } from "./_components/add-property-form-combobox";
-import {
-  type Locations,
-  type Category,
-  type PropertyItem,
-} from "@prisma/client";
+import { type Locations, type Category } from "@prisma/client";
 
 const formSchema = z.object({
   title: z.string().min(2, {

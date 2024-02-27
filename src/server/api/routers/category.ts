@@ -1,43 +1,28 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const categoriesRouter = createTRPCRouter({
-  // hello: publicProcedure
-  //   .input(z.object({ text: z.string() }))
-  //   .query(({ input }) => {
-  //     return {
-  //       greeting: `Hello ${input.text}`,
-  //     };
-  //   }),
-
-  //   create: protectedProcedure
-  //     .input(z.object({ name: z.string().min(1) }))
-  //     .mutation(async ({ ctx, input }) => {
-  //       // simulate a slow db call
-  //       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  //       return ctx.db.post.create({
-  //         data: {
-  //           name: input.name,
-  //           createdBy: { connect: { id: ctx.session.user.id } },
-  //         },
-  //       });
-  //     }),
-
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    // return ctx.db.locations.findMany({
-    //   orderBy: { createdAt: "desc" },
-    //   where: { createdBy: { id: ctx.session.user.id } },
-    // });
-    return ctx.db.category.findMany();
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  create: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const location = await ctx.db.category.create({
+        data: { name: input.name, userId: ctx.session?.user.id ?? "" },
+      });
+      return location;
+    }),
+  delete: protectedProcedure
+    .input(z.object({ categoryId: z.string().min(1) }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.category.delete({
+        where: {
+          id: input.categoryId,
+        },
+      });
+    }),
+  list: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.category.findMany({
+      where: { user: { id: ctx.session.user.id } },
+    });
   }),
 });

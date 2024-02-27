@@ -28,6 +28,9 @@ const categoryNames = [
   "Mall",
   "Warehouse",
 ];
+
+const createdById = "clt3byhm0000funupldmvejp4"; // IMPORTANT : add the user before the script runs
+
 async function main() {
   //   await prisma.user.deleteMany({}); // use with caution.
 
@@ -40,6 +43,7 @@ async function main() {
     const categories: Category = {
       id: faker.string.uuid(),
       name: categoryNames[i] ?? "",
+      userId: createdById,
     };
 
     seedCategories.push(categories);
@@ -55,6 +59,7 @@ async function main() {
     const location: Locations = {
       id: faker.string.uuid(),
       name: locationNames[i] ?? "",
+      userId: createdById,
     };
 
     seedLocations.push(location);
@@ -79,7 +84,7 @@ async function main() {
       title: faker.word.words({ count: { min: 2, max: 4 } }),
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
-      createdById: "clsz72tjd0000q74sjh6qs3c4",
+      createdById: createdById,
       length: faker.number.float({ min: 10, max: 40 }),
       width: faker.number.float({ min: 20, max: 30 }),
       floors: faker.number.int({ min: 0, max: 3 }),

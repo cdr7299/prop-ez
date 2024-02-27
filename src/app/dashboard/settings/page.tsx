@@ -3,9 +3,10 @@ import { api } from "~/trpc/server";
 import TabsContentCustom from "./_components/tab-content-custom";
 
 export default async function DashboardSettings() {
-  const locations = await api.locations.getLatest.query();
-  const categories = await api.categories.getLatest.query();
-  const properties = await api.properties.getLatest.query();
+  const locations = await api.locations.list.query();
+  const categories = await api.categories.list.query();
+  const properties = await api.properties.list.query();
+
   return (
     <div className="flex  size-full max-w-screen-2xl flex-col items-center justify-center">
       <Tabs defaultValue="Locations" className="flex size-full">
@@ -17,12 +18,14 @@ export default async function DashboardSettings() {
           value="Locations"
           data={locations}
           properties={properties}
+          label={"Location"}
           accessor="locationId"
         />
         <TabsContentCustom
           value="Categories"
           data={categories}
           properties={properties}
+          label={"Category"}
           accessor="categoryId"
         />
       </Tabs>

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const propertiesRouter = createTRPCRouter({
-  getPropertiesByLocation: protectedProcedure
+  byLocationId: protectedProcedure
     .input(z.object({ locationId: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       return ctx.db.propertyItem.findMany({
@@ -14,14 +14,10 @@ export const propertiesRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: protectedProcedure.query(({ ctx }) => {
+  list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.findMany({
       orderBy: { createdAt: "desc" },
       where: { createdBy: { id: ctx.session.user.id } },
     });
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
   }),
 });

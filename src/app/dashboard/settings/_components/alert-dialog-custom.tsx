@@ -38,7 +38,12 @@ export default function AlertDialogCustom({
               <span className="font-extrabold underline">Address</span>
             </div>
             <ScrollArea className="mt-2 h-[200px] w-full rounded-md border p-2 px-3">
-              <div className="flex flex-col">
+              <div className="flex size-full flex-col">
+                {affectedProperties.length === 0 && (
+                  <div className="flex size-full items-center justify-center">
+                    No linked properties found, safe to delete.
+                  </div>
+                )}
                 {affectedProperties.map((property) => (
                   <div key={property.id} className="flex justify-between gap-2">
                     <span>{property.title}</span>

@@ -81,7 +81,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "pricePerSqFt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price per Sq Ft." />
+      <DataTableColumnHeader column={column} title="Price (Sq Ft.)" />
     ),
     cell: ({ row }) => (
       <div className="w-full">
@@ -110,7 +110,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "area",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Area(sq ft.)" />
+      <DataTableColumnHeader column={column} title="Area(Sq Ft.)" />
     ),
     cell: ({ row }) => (
       <div className="w-full">{Number(row.getValue("area")).toFixed(2)}</div>
