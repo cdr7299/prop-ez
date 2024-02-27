@@ -13,6 +13,7 @@ export function AddItemDialog({
   title,
   onAdd,
   data,
+  isAdding,
 }: {
   open: boolean;
   setOpen: (args: boolean) => void;
@@ -22,6 +23,7 @@ export function AddItemDialog({
     id: string;
     name: string;
   }[];
+  isAdding: boolean;
 }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -32,7 +34,7 @@ export function AddItemDialog({
             Add new {title} here, press submit to save it.
           </DialogDescription>
         </DialogHeader>
-        <AddItemForm data={data} onSubmit={onAdd} />
+        <AddItemForm data={data} onSubmit={onAdd} isAdding={isAdding} />
       </DialogContent>
     </Dialog>
   );

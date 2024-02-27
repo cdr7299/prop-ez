@@ -1,11 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { api } from "~/trpc/server";
 
-export default function DashboardCards() {
+export default async function DashboardCards() {
+  const {
+    _avg: { pricePerSqFt },
+  } = await api.properties.avgPricePerSqFt.query();
+
+  const allProperties = await api.properties.list.query();
+
+  const totalRevenue = allProperties.reduce(
+    (acc, curr) =>
+      acc +
+      Number(curr.pricePerSqFt) * Number(curr.length) * Number(curr.width),
+    0,
+  );
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Total Revenue to be made
+          </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -20,15 +36,23 @@ export default function DashboardCards() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">$45,231.89</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="text-2xl font-bold">
+            {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumSignificantDigits: 3,
+            }).format(Number(totalRevenue))}
+          </div>
+          {/* <p className="text-xs text-muted-foreground">
             +20.1% from last month
-          </p>
+          </p> */}
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Avg. Price Per Square Feet
+          </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -45,15 +69,23 @@ export default function DashboardCards() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+2350</div>
-          <p className="text-xs text-muted-foreground">
+          <div className="text-2xl font-bold">
+            {new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+              maximumSignificantDigits: 3,
+            }).format(Number(pricePerSqFt))}
+          </div>
+          {/* <p className="text-xs text-muted-foreground">
             +180.1% from last month
-          </p>
+          </p> */}
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Sales</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Most Popular Location
+          </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -70,12 +102,14 @@ export default function DashboardCards() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">+12,234</div>
-          <p className="text-xs text-muted-foreground">+19% from last month</p>
+          {/* <p className="text-xs text-muted-foreground">+19% from last month</p> */}
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Total Active Properties
+          </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -90,8 +124,8 @@ export default function DashboardCards() {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+573</div>
-          <p className="text-xs text-muted-foreground">+201 since last hour</p>
+          <div className="text-2xl font-bold">{allProperties.length}</div>
+          {/* <p className="text-xs text-muted-foreground">+201 since last hour</p> */}
         </CardContent>
       </Card>
     </div>

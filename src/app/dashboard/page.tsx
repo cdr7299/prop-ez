@@ -18,7 +18,6 @@ export default async function Dashboard() {
   const locations = await api.locations.list.query();
   const categories = await api.categories.list.query();
   const properties = await api.properties.list.query();
-  console.log(properties);
   const propertiesFinal = properties.map((item) => ({
     ...item,
     area: (item.length ?? 0) * (item.width ?? 0),
@@ -44,7 +43,7 @@ export default async function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <AddProperty />
+            <AddProperty categories={categories} locations={locations} />
             {/* <Button variant="secondary">Manage Categories</Button>
             <Button variant="secondary">Manage Locations</Button>
             <Button variant="secondary">Manage Statues</Button> */}

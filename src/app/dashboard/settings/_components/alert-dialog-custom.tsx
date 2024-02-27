@@ -1,4 +1,5 @@
 import { type PropertyItem } from "@prisma/client";
+import DotLoader from "~/components/dot-loader";
 import {
   AlertDialog,
   AlertDialogFooter,
@@ -17,12 +18,14 @@ export default function AlertDialogCustom({
   affectedProperties = [],
   selectedItemName,
   onDelete,
+  isDeleting,
 }: {
   open: boolean;
   setOpen: (args: boolean) => void;
   affectedProperties: PropertyItem[];
   selectedItemName: string;
   onDelete: () => void;
+  isDeleting: boolean;
 }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -61,7 +64,8 @@ export default function AlertDialogCustom({
             className="bg-destructive/80 hover:bg-destructive"
             onClick={onDelete}
           >
-            Delete {selectedItemName}
+            {!isDeleting && `Delete ${selectedItemName}`}
+            {isDeleting && <DotLoader />}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
