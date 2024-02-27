@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Settings } from "lucide-react";
 import { AddProperty } from "./_components/add-property/add-property";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
+import { ArchiveIcon } from "@radix-ui/react-icons";
 
 export const metadata: Metadata = {
   title: "Properties",
@@ -44,9 +45,14 @@ export default async function Dashboard() {
           </div>
           <div className="flex items-center gap-4">
             <AddProperty categories={categories} locations={locations} />
-            {/* <Button variant="secondary">Manage Categories</Button>
-            <Button variant="secondary">Manage Locations</Button>
-            <Button variant="secondary">Manage Statues</Button> */}
+            <Link
+              href="/dashboard/archived"
+              className="text-sm hover:underline"
+            >
+              <Button variant="secondary">
+                <ArchiveIcon />
+              </Button>
+            </Link>
             <Button variant="secondary" asChild>
               <Link href="/dashboard/settings">
                 <Settings className="size-4" />

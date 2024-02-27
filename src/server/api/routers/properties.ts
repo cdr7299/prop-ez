@@ -3,6 +3,13 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const propertiesRouter = createTRPCRouter({
+  delete: protectedProcedure
+    .input(z.object({ propertyId: z.string().min(1) }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.propertyItem.delete({
+        where: { id: input.propertyId },
+      });
+    }),
   create: protectedProcedure
     .input(
       z.object({
@@ -20,9 +27,6 @@ export const propertiesRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.propertyItem.create({
         data: {
           pricePerSqFt: input.pricePerSqFt,
