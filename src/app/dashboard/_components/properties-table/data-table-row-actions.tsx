@@ -20,16 +20,28 @@ import {
 
 import { labels } from "../../data/data";
 import { propertySchema } from "../../data/schema";
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 // import { taskSchema } from "../data/schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
+  propertyId: string;
 }
 
 export function DataTableRowActions<TData>({
   row,
+  propertyId,
 }: DataTableRowActionsProps<TData>) {
+  const router = useRouter();
   const properties = propertySchema.parse(row.original);
+  const { mutateAsync } = api.properties.delete.useMutation({
+    onSuccess: (params) => {
+      toast.success(`Deleted Property ${params.title}`);
+      router.refresh();
+    },
+  });
 
   return (
     <DropdownMenu>
@@ -60,7 +72,11 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => {
+            await mutateAsync({ propertyId: propertyId });
+          }}
+        >
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
