@@ -19,14 +19,12 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   locations: Locations[];
   categories: Category[];
-  setRowSelection: (obj: Array<any>) => void;
 }
 
 export function DataTableToolbar<TData>({
   table,
   locations,
   categories,
-  setRowSelection,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const router = useRouter();
@@ -45,12 +43,13 @@ export function DataTableToolbar<TData>({
     onSuccess: (params) => {
       toast.success(`Succesfully deleted ${params.count} properties`);
       router.refresh();
-      setRowSelection({});
+      table.resetRowSelection();
     },
   });
 
   const onDeleteMultiple = async () => {
     console.log(selectedRows);
+    // @ts-expect-error tanstack not exposing types correct
     const propertyIds = selectedRows.map((row) => row.original.id as string);
     await mutateAsync(propertyIds);
   };
