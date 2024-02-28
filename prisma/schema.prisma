@@ -159,8 +159,8 @@ model Status {
 model BrokerEntity {
   id           String         @id @default(cuid())
   name         String
-  user         User?          @relation(fields: [userId], references: [id])
-  userId       String?
-  phoneNumber  String
+  createdBy    User           @relation(fields: [createdById], references: [id]) //createdBy
+  createdById  String
+  phoneNumber  String?
   PropertyItem PropertyItem[]
 }
