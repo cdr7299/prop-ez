@@ -33,7 +33,7 @@ export const propertiesRouter = createTRPCRouter({
         address: z.string().min(5),
         categoryId: z.string(),
         locationId: z.string(),
-        brokerEntityId: z.string(),
+        brokerEntityId: z.string().optional(),
         pricePerSqFt: z.number(),
       }),
     )

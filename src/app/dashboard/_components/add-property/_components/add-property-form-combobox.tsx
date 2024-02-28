@@ -30,7 +30,7 @@ export function AddPropertyCombobox({
     id: string;
     name: string;
   }[];
-  value: string | null;
+  value?: string;
   setValue: (arg: string) => void;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -69,7 +69,6 @@ export function AddPropertyCombobox({
                   key={item.id}
                   value={item.id}
                   onSelect={(currentValue) => {
-                    console.log(currentValue);
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}

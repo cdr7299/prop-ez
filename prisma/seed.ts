@@ -60,6 +60,7 @@ async function main() {
       id: faker.string.uuid(),
       floors: 0,
       categoryId: seedCategories[0]?.id ?? "",
+      createdById: createdById,
     },
   });
 
