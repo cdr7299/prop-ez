@@ -154,7 +154,6 @@ export default function TabsContentCustom({
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}
-        data={data}
         onAdd={async (formValues) => {
           await onAdd(accessor, formValues);
         }}
