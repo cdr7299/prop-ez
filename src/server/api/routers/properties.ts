@@ -33,7 +33,7 @@ export const propertiesRouter = createTRPCRouter({
         address: z.string().min(5),
         categoryId: z.string(),
         locationId: z.string(),
-        brokerName: z.string(),
+        brokerEntityId: z.string(),
         pricePerSqFt: z.number(),
       }),
     )
@@ -45,7 +45,7 @@ export const propertiesRouter = createTRPCRouter({
           width: input.width,
           locationId: input.locationId,
           categoryId: input.categoryId,
-          brokerName: input.brokerName,
+          brokerEntityId: input.brokerEntityId,
           floors: input.floors,
           address: input.address,
           title: input.title,
@@ -67,7 +67,9 @@ export const propertiesRouter = createTRPCRouter({
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.findMany({
       orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
+      where: {
+        createdBy: { id: ctx.session.user.id },
+      },
     });
   }),
 

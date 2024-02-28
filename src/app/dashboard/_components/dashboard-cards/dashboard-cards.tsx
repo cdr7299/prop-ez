@@ -8,16 +8,9 @@ export default async function DashboardCards() {
 
   const allProperties = await api.properties.list.query();
 
-  const totalRevenue = allProperties.reduce(
-    (acc, curr) =>
-      acc +
-      Number(curr.pricePerSqFt) * Number(curr.length) * Number(curr.width),
-    0,
-  );
-
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+    <div className="hidden gap-4 sm:grid md:grid-cols-2 lg:grid-cols-4">
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Total Revenue to be made
@@ -43,11 +36,11 @@ export default async function DashboardCards() {
               maximumSignificantDigits: 3,
             }).format(Number(totalRevenue))}
           </div>
-          {/* <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             +20.1% from last month
-          </p> */}
+          </p>
         </CardContent>
-      </Card>
+      </Card> */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
@@ -81,7 +74,7 @@ export default async function DashboardCards() {
           </p> */}
         </CardContent>
       </Card>
-      <Card>
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Most Popular Location
@@ -102,9 +95,9 @@ export default async function DashboardCards() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">+12,234</div>
-          {/* <p className="text-xs text-muted-foreground">+19% from last month</p> */}
+          <p className="text-xs text-muted-foreground">+19% from last month</p>
         </CardContent>
-      </Card>
+      </Card> */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">

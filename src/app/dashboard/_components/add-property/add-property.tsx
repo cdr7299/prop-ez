@@ -11,14 +11,20 @@ import {
 } from "~/components/ui/dialog";
 import { AddPropertyForm } from "./add-property-form";
 import { useState } from "react";
-import { type Locations, type Category } from "@prisma/client";
+import {
+  type Locations,
+  type Category,
+  type BrokerEntity,
+} from "@prisma/client";
 
 export function AddProperty({
   categories,
   locations,
+  brokers,
 }: {
   categories: Category[];
   locations: Locations[];
+  brokers: BrokerEntity[];
 }) {
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -36,6 +42,7 @@ export function AddProperty({
         <AddPropertyForm
           categories={categories}
           locations={locations}
+          brokers={brokers}
           setOpen={setOpen}
         />
       </DialogContent>

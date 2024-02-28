@@ -1,7 +1,12 @@
 "use client";
 
 import { type PropertyItem } from "@prisma/client";
-import { Cross2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import {
+  Cross2Icon,
+  Pencil1Icon,
+  Pencil2Icon,
+  PlusCircledIcon,
+} from "@radix-ui/react-icons";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
@@ -11,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AddItemDialog } from "./add-item-dialog";
 
-export default function TabsContentCustom({
+export default function TabsContentCustomCategories({
   value,
   data,
   properties,
@@ -44,15 +49,6 @@ export default function TabsContentCustom({
     setSelectedItem({ id: itemId, name: itemName });
   };
 
-  const { isLoading: isDeletingLocations, mutateAsync: deleteLocationsAsync } =
-    api.locations.delete.useMutation({
-      async onSuccess(params) {
-        const itemName = data.find((item) => item.id === params.id);
-        toast.success(`Deleted ${itemName?.name} location successfully`);
-        router.refresh();
-      },
-    });
-
   const {
     isLoading: isDeletingCategories,
     mutateAsync: deleteCategoriesAsync,
@@ -63,19 +59,6 @@ export default function TabsContentCustom({
       router.refresh();
     },
   });
-  const { isLoading: isAddingLocations, mutateAsync: addLocationsAsync } =
-    api.locations.create.useMutation({
-      async onError(params) {
-        toast.error(
-          `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
-        );
-      },
-      async onSuccess(params) {
-        toast.success(`Added ${params.name} successfully`);
-        setShowAddDialog(false);
-        router.refresh();
-      },
-    });
 
   const { isLoading: isAddingCategories, mutateAsync: addCategoriesAsync } =
     api.categories.create.useMutation({
@@ -91,29 +74,16 @@ export default function TabsContentCustom({
       },
     });
 
-  const onDelete = async (accessor: "locationId" | "categoryId") => {
-    if (accessor === "locationId")
-      await deleteLocationsAsync({
-        locationId: selectedItem?.id ?? "",
-      });
-    else
-      await deleteCategoriesAsync({
-        categoryId: selectedItem?.id ?? "",
-      });
+  const onDelete = async () => {
+    await deleteCategoriesAsync({
+      categoryId: selectedItem?.id ?? "",
+    });
   };
 
-  const onAdd = async (
-    accessor: "locationId" | "categoryId",
-    formValues: { name: string },
-  ) => {
-    if (accessor === "locationId")
-      await addLocationsAsync({
-        name: formValues.name,
-      });
-    else
-      await addCategoriesAsync({
-        name: formValues.name,
-      });
+  const onAdd = async (formValues: { name: string }) => {
+    await addCategoriesAsync({
+      name: formValues.name,
+    });
   };
 
   return (
@@ -129,7 +99,7 @@ export default function TabsContentCustom({
             onClick={() => showDeleteWarning(item.id, item.name)}
           >
             {item.name}
-            <Cross2Icon className="size-4" />
+            <Pencil2Icon className="size-4" />
           </Button>
         ))}
       </div>
@@ -146,17 +116,17 @@ export default function TabsContentCustom({
         setOpen={setShowAlert}
         affectedProperties={affectedProperties}
         selectedItemName={selectedItem?.name ?? ""}
-        isDeleting={isDeletingLocations || isDeletingCategories}
-        onDelete={() => onDelete(accessor)}
+        isDeleting={isDeletingCategories}
+        onDelete={() => onDelete()}
       />
       <AddItemDialog
-        isAdding={isAddingLocations || isAddingCategories}
+        isAdding={isAddingCategories}
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}
         data={data}
         onAdd={async (formValues) => {
-          await onAdd(accessor, formValues);
+          await onAdd(formValues);
         }}
       />
     </TabsContent>

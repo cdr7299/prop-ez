@@ -17,29 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-
-// const data = [
-//   {
-//     value: "next.js",
-//     label: "Next.js",
-//   },
-//   {
-//     value: "sveltekit",
-//     label: "SvelteKit",
-//   },
-//   {
-//     value: "nuxt.js",
-//     label: "Nuxt.js",
-//   },
-//   {
-//     value: "remix",
-//     label: "Remix",
-//   },
-//   {
-//     value: "astro",
-//     label: "Astro",
-//   },
-// ];
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export function AddPropertyCombobox({
   placeholder,
@@ -69,30 +47,44 @@ export function AddPropertyCombobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
-        <Command>
-          <CommandInput placeholder={placeholder} />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            {data.map((item) => (
-              <CommandItem
-                key={item.id}
-                value={item.id}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === item.id ? "opacity-100" : "opacity-0",
-                  )}
-                />
-                {item.name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+      <PopoverContent className="p-0" sideOffset={5}>
+        <Command
+          filter={(value, search) => {
+            const matchingRows = data.filter((item) =>
+              item.name.toLowerCase().includes(search.toLowerCase()),
+            );
+            if (matchingRows.find((item) => item.id === value)) return 1;
+            return 0;
+          }}
+        >
+          <ScrollArea className="h-52 w-full">
+            <CommandInput
+              placeholder={placeholder}
+              className=" !sticky !top-0"
+            />
+            <CommandEmpty>No item found.</CommandEmpty>
+            <CommandGroup accessKey="name">
+              {data.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  value={item.id}
+                  onSelect={(currentValue) => {
+                    console.log(currentValue);
+                    setValue(currentValue === value ? "" : currentValue);
+                    setOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === item.id ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  {item.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

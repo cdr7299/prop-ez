@@ -8,7 +8,11 @@ import { Input } from "~/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { type Category, type Locations } from "@prisma/client";
+import {
+  type BrokerEntity,
+  type Category,
+  type Locations,
+} from "@prisma/client";
 import AlertDialogDeleteProperty from "../alert-dialog-delete-property";
 import { useState } from "react";
 import { api } from "~/trpc/react";
@@ -19,12 +23,14 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   locations: Locations[];
   categories: Category[];
+  brokers: BrokerEntity[];
 }
 
 export function DataTableToolbar<TData>({
   table,
   locations,
   categories,
+  brokers,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const router = useRouter();
@@ -36,9 +42,13 @@ export function DataTableToolbar<TData>({
     label: item.name,
     value: item.name,
   }));
+  const brokerOptions = brokers?.map((item) => ({
+    label: item.name,
+    value: item.name,
+  }));
+
   const [open, setOpen] = useState<boolean>(false);
   const selectedRows = table.getSelectedRowModel().flatRows;
-  console.log(selectedRows);
   const { mutateAsync } = api.properties.deleteMany.useMutation({
     onSuccess: (params) => {
       toast.success(`Succesfully deleted ${params.count} properties`);
@@ -48,17 +58,16 @@ export function DataTableToolbar<TData>({
   });
 
   const onDeleteMultiple = async () => {
-    console.log(selectedRows);
-    // @ts-expect-error tanstack not exposing types correct
+    // @ts-expect-error tanstack not exposing types correctly
     const propertyIds = selectedRows.map((row) => row.original.id as string);
     await mutateAsync(propertyIds);
   };
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-1 flex-wrap items-center gap-y-2 space-x-2 sm:flex-nowrap sm:gap-y-0">
         <Input
-          placeholder="Filter Properties by title..."
+          placeholder="Search Properties by title..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
@@ -77,6 +86,13 @@ export function DataTableToolbar<TData>({
             column={table.getColumn("category")}
             title="Category"
             options={categoryOptions || []}
+          />
+        )}
+        {table.getColumn("brokerName") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("brokerName")}
+            title="Brokers"
+            options={brokerOptions || []}
           />
         )}
         {isFiltered && (

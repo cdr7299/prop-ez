@@ -7,7 +7,7 @@ export const categoriesRouter = createTRPCRouter({
     .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const location = await ctx.db.category.create({
-        data: { name: input.name, userId: ctx.session?.user.id ?? "" },
+        data: { name: input.name, createdById: ctx.session?.user.id ?? "" },
       });
       return location;
     }),
@@ -22,7 +22,7 @@ export const categoriesRouter = createTRPCRouter({
     }),
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.category.findMany({
-      where: { user: { id: ctx.session.user.id } },
+      where: { createdBy: { id: ctx.session.user.id } },
     });
   }),
 });

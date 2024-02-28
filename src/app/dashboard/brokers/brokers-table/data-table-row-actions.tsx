@@ -18,12 +18,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-import { labels, statuses } from "../../data/data";
-import { propertySchema } from "../../data/schema";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-// import { taskSchema } from "../data/schema";
+import { brokerSchema } from "../data/schema";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,10 +33,10 @@ export function DataTableRowActions<TData>({
   propertyId,
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter();
-  const properties = propertySchema.parse(row.original);
-  const { mutateAsync } = api.properties.delete.useMutation({
+  const brokers = brokerSchema.parse(row.original);
+  const { mutateAsync } = api.brokers.delete.useMutation({
     onSuccess: (params) => {
-      toast.success(`Deleted Property ${params.title}`);
+      toast.success(`Deleted Broker ${params.name}`);
       router.refresh();
     },
   });
@@ -57,22 +55,9 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem>Edit</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={properties.title ?? ""}>
-              {statuses.map((label) => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
-            await mutateAsync({ propertyId: propertyId });
+            await mutateAsync({ brokerId: propertyId });
           }}
         >
           Delete

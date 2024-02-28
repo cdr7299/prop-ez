@@ -53,8 +53,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Address" />
     ),
     cell: ({ row }) => (
-      <div className="flex w-full gap-1">
-        <Badge variant="default">{row.original.category}</Badge>
+      <div className="flex w-full min-w-64 items-center gap-1">
+        <Badge variant="default" className="h-6">
+          {row.original.category}
+        </Badge>
         {row.getValue("address")}
       </div>
     ),
@@ -157,6 +159,25 @@ export const columns: ColumnDef<PropertyItem>[] = [
     cell: ({ row }) => (
       <div className="max-w-[150px] truncate">{row.getValue("brokerName")}</div>
     ),
+    filterFn: (row, id, value: string) => {
+      return value.includes(row.getValue(id));
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "brokerContactNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Broker Contact No." />
+    ),
+    cell: ({ row }) => (
+      <div className="max-w-[150px] truncate">
+        {row.getValue("brokerContactNumber")}
+      </div>
+    ),
+    filterFn: (row, id, value: string) => {
+      return value.includes(row.getValue(id));
+    },
     enableSorting: true,
     enableHiding: true,
   },
