@@ -57,7 +57,7 @@ export function AddPropertyCombobox({
             return 0;
           }}
         >
-          <ScrollArea className="h-72 w-full">
+          <ScrollArea className="h-52 w-full">
             <CommandInput
               placeholder={placeholder}
               className=" !sticky !top-0"

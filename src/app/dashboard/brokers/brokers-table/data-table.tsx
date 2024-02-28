@@ -27,26 +27,15 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import {
-  type BrokerEntity,
-  type Category,
-  type Locations,
-} from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  locations: Locations[];
-  categories: Category[];
-  brokers: BrokerEntity[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  locations,
-  categories,
-  brokers,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -86,12 +75,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        locations={locations}
-        categories={categories}
-        brokers={brokers}
-      />
+      <DataTableToolbar table={table} />
       <div className="rounded-md border border-primary">
         <Table>
           <TableHeader>

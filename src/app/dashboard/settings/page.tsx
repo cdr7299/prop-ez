@@ -11,7 +11,7 @@ export default async function DashboardSettings() {
   const properties = await api.properties.list.query();
 
   return (
-    <div className="flex  size-full max-w-screen-2xl flex-col items-center justify-center">
+    <div className="flex size-full max-w-screen-2xl flex-col items-center justify-center">
       <Tabs defaultValue="Locations" className="flex size-full">
         <TabsList className="flex h-full flex-col justify-start gap-4 rounded-none border-x-[1px] !bg-inherit px-6 py-4">
           <Link

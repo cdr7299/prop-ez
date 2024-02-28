@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Settings } from "lucide-react";
 import { AddProperty } from "./_components/add-property/add-property";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
-import { ArchiveIcon } from "@radix-ui/react-icons";
+import { ArchiveIcon, IdCardIcon } from "@radix-ui/react-icons";
 
 export const metadata: Metadata = {
   title: "Properties",
@@ -31,6 +31,9 @@ export default async function Dashboard() {
       locations.find((location) => item.locationId === location.id)?.name ?? "",
     brokerName: brokers.find((broker) => item.brokerEntityId === broker.id)
       ?.name,
+    brokerContactNumber: brokers.find(
+      (broker) => item.brokerEntityId === broker.id,
+    )?.phoneNumber,
   }));
 
   const session = await getServerAuthSession();
@@ -46,20 +49,22 @@ export default async function Dashboard() {
               Here&apos;s a list of properties you have saved!
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4 sm:flex-nowrap">
             <AddProperty
               categories={categories}
               locations={locations}
               brokers={brokers}
             />
-            <Link
-              href="/dashboard/archived"
-              className="text-sm hover:underline"
-            >
-              <Button variant="secondary">
-                <ArchiveIcon />
-              </Button>
-            </Link>
+            <Button variant="secondary" className="items-center gap-2" asChild>
+              <Link href="/dashboard/brokers" className="text-sm">
+                Brokers <IdCardIcon className="size-5" />
+              </Link>
+            </Button>
+            <Button variant="secondary" asChild className="items-center gap-2">
+              <Link href="/dashboard/archived" className="text-sm">
+                Archive <ArchiveIcon className="size-4" />
+              </Link>
+            </Button>
             <Button variant="secondary" asChild>
               <Link href="/dashboard/settings">
                 <Settings className="size-4" />
@@ -73,6 +78,7 @@ export default async function Dashboard() {
           columns={columns}
           locations={locations}
           categories={categories}
+          brokers={brokers}
         />
       </div>
     </div>

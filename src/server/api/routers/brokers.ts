@@ -16,12 +16,23 @@ export const brokersRouter = createTRPCRouter({
       });
       return location;
     }),
+  deleteMany: protectedProcedure
+    .input(z.array(z.string()))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.brokerEntity.deleteMany({
+        where: {
+          id: {
+            in: input,
+          },
+        },
+      });
+    }),
   delete: protectedProcedure
-    .input(z.object({ locationId: z.string().min(1) }))
+    .input(z.object({ brokerId: z.string().min(1) }))
     .mutation(({ ctx, input }) => {
       return ctx.db.brokerEntity.delete({
         where: {
-          id: input.locationId,
+          id: input.brokerId,
         },
       });
     }),
