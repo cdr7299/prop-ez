@@ -22,7 +22,7 @@ import DotLoader from "~/components/dot-loader";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  phoneNumber: z.string().min(10).max(10),
+  phoneNumber: z.string().min(10).max(10).optional(),
 });
 
 export function AddBrokerForm({

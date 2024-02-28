@@ -1,12 +1,7 @@
 "use client";
 
 import { type PropertyItem } from "@prisma/client";
-import {
-  Cross2Icon,
-  Pencil1Icon,
-  Pencil2Icon,
-  PlusCircledIcon,
-} from "@radix-ui/react-icons";
+import { Pencil2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
@@ -124,7 +119,6 @@ export default function TabsContentCustomCategories({
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}
-        data={data}
         onAdd={async (formValues) => {
           await onAdd(formValues);
         }}

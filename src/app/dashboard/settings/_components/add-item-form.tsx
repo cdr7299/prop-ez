@@ -20,17 +20,13 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
+  defaultFloors: z.string().optional(),
 });
 
 export function AddItemForm({
-  data,
   onSubmit,
   isAdding,
 }: {
-  data: {
-    id: string;
-    name: string;
-  }[];
   onSubmit: (args: { name: string }) => void;
   isAdding: boolean;
 }) {
@@ -54,13 +50,6 @@ export function AddItemForm({
         <FormField
           control={form.control}
           name="name"
-          rules={{
-            required: true,
-            validate: (value) => {
-              const hasDuplicate = data.find((item) => item.name === value);
-              return !hasDuplicate || "Name already exists";
-            },
-          }}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>

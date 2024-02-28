@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -38,7 +38,7 @@ const formSchema = z.object({
   address: z.string().min(5),
   categoryId: z.string(),
   locationId: z.string(),
-  brokerEntityId: z.string(),
+  brokerEntityId: z.string().optional(),
   pricePerSqFt: z.number(),
   calculatedPrice: z.number(),
 });
@@ -59,9 +59,10 @@ export function AddPropertyForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      floors: 0,
     },
   });
+  // const categoryConfigs = api.categoriesConfig.list.useQuery();
+
   const watchLength = form.watch("length");
   const watchWidth = form.watch("width");
   const watchPricePerSqFt = form.watch("pricePerSqFt");
@@ -94,6 +95,19 @@ export function AddPropertyForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await mutateAsync(values);
   }
+
+  const setCategoryValue = useCallback(
+    (val: string) => {
+      form.setValue("categoryId", val);
+      // const config = categoryConfigs.data?.find(
+      //   (item) => item.categoryId === val,
+      // );
+      // if (config) {
+      //   form.setValue("floors", config.floors);
+      // }
+    },
+    [form],
+  );
 
   return (
     <Form {...form}>
@@ -163,9 +177,7 @@ export function AddPropertyForm({
                     placeholder="Select Category.."
                     data={categories}
                     value={field.value}
-                    setValue={(val) => {
-                      form.setValue("categoryId", val);
-                    }}
+                    setValue={setCategoryValue}
                   />
                 </FormControl>
                 <FormMessage />
