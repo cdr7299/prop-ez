@@ -33,14 +33,14 @@ const formSchema = z.object({
   }),
   length: z.number(),
   width: z.number(),
-  area: z.number(),
+  area: z.number().optional(),
   floors: z.number().int({ message: "Floors can be integers only" }),
   address: z.string().min(5),
   categoryId: z.string(),
   locationId: z.string(),
   brokerEntityId: z.string().optional(),
   pricePerSqFt: z.number(),
-  calculatedPrice: z.number(),
+  calculatedPrice: z.number().optional(),
 });
 
 export function AddPropertyForm({
@@ -120,7 +120,7 @@ export function AddPropertyForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Title</FormLabel>
+              <FormLabel>Property Title *</FormLabel>
               <FormControl>
                 <Input placeholder="Some info about property.." {...field} />
               </FormControl>
@@ -136,7 +136,7 @@ export function AddPropertyForm({
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address</FormLabel>
+              <FormLabel>Address *</FormLabel>
               <FormControl>
                 <Input
                   placeholder="ex. 8355 - St. 18, Durga Puri, Haibowal"
@@ -153,7 +153,7 @@ export function AddPropertyForm({
             name="locationId"
             render={({ field }) => (
               <FormItem className="flex basis-1/2 flex-col gap-2">
-                <FormLabel>Location</FormLabel>
+                <FormLabel>Location *</FormLabel>
                 <FormControl>
                   <AddPropertyCombobox
                     placeholder="Select Locations.."
@@ -171,7 +171,7 @@ export function AddPropertyForm({
             name="categoryId"
             render={({ field }) => (
               <FormItem className="flex basis-1/2 flex-col gap-2">
-                <FormLabel>Category</FormLabel>
+                <FormLabel>Category *</FormLabel>
                 <FormControl>
                   <AddPropertyCombobox
                     placeholder="Select Category.."
@@ -193,7 +193,7 @@ export function AddPropertyForm({
             name="floors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Number of Floors</FormLabel>
+                <FormLabel>Number of Floors *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="ex. 2"
@@ -211,7 +211,7 @@ export function AddPropertyForm({
             name="length"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Length(ft.)</FormLabel>
+                <FormLabel>Length(ft.) *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="ex. 50"
@@ -229,7 +229,7 @@ export function AddPropertyForm({
             name="width"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Width(ft.)</FormLabel>
+                <FormLabel>Width(ft.) *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="ex. 30"
@@ -282,7 +282,7 @@ export function AddPropertyForm({
             name="pricePerSqFt"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Price(per sq ft.)</FormLabel>
+                <FormLabel>Price(per sq ft.) *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="ex. 2"

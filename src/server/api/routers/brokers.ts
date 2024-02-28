@@ -3,6 +3,26 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const brokersRouter = createTRPCRouter({
+  update: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        phoneNumber: z.string().optional(),
+        brokerId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const location = await ctx.db.brokerEntity.update({
+        where: {
+          id: input.brokerId,
+        },
+        data: {
+          name: input.name,
+          phoneNumber: input.phoneNumber,
+        },
+      });
+      return location;
+    }),
   create: protectedProcedure
     .input(z.object({ name: z.string(), phoneNumber: z.string().optional() }))
     .mutation(async ({ ctx, input }) => {

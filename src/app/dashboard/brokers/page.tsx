@@ -1,7 +1,7 @@
 import { api } from "~/trpc/server";
 import { DataTable } from "./brokers-table/data-table";
 import { columns } from "./brokers-table/columns";
-import { AddBroker } from "./add-broker/add-broker";
+import { AddBroker } from "./add-broker";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -26,7 +26,7 @@ export default async function Page() {
         </div>
         <AddBroker brokers={brokers} />
       </div>
-      <DataTable columns={columns} data={brokers} />
+      <DataTable columns={columns} data={brokers} brokers={brokers} />
     </div>
   );
 }

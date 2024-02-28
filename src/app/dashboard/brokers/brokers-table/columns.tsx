@@ -60,8 +60,8 @@ export const columns: ColumnDef<BrokerSchema>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => (
-      <DataTableRowActions row={row} propertyId={row.original.id} />
+    cell: ({ row, table }) => (
+      <DataTableRowActions brokerId={row.original.id} table={table} />
     ),
   },
 ];
