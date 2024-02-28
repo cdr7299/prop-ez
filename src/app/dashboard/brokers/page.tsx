@@ -1,7 +1,7 @@
 import { api } from "~/trpc/server";
 import { DataTable } from "./brokers-table/data-table";
 import { columns } from "./brokers-table/columns";
-import { AddBroker } from "./add-broker/add-broker";
+import { AddBroker } from "./add-broker";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ export default async function Page() {
   const brokers = await api.brokers.list.query();
 
   return (
-    <div className="flex size-full max-w-screen-2xl flex-col gap-8 py-4">
+    <div className="flex size-full max-w-screen-2xl flex-col gap-8 p-4">
       <Link
         href="/dashboard"
         className="text-normal flex w-full items-center gap-2 self-start font-extrabold underline-offset-4 hover:underline"
@@ -26,7 +26,7 @@ export default async function Page() {
         </div>
         <AddBroker brokers={brokers} />
       </div>
-      <DataTable columns={columns} data={brokers} />
+      <DataTable columns={columns} data={brokers} brokers={brokers} />
     </div>
   );
 }

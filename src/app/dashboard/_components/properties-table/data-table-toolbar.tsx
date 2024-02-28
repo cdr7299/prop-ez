@@ -18,6 +18,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { propertySchema } from "../../data/schema";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -58,8 +59,9 @@ export function DataTableToolbar<TData>({
   });
 
   const onDeleteMultiple = async () => {
-    // @ts-expect-error tanstack not exposing types correctly
-    const propertyIds = selectedRows.map((row) => row.original.id as string);
+    const propertyIds = selectedRows.map(
+      (row) => propertySchema.parse(row.original).id,
+    );
     await mutateAsync(propertyIds);
   };
 
@@ -116,7 +118,7 @@ export function DataTableToolbar<TData>({
               setOpen(true);
             }}
           >
-            Delete Multiple items
+            Delete
           </Button>
         )}
         <DataTableViewOptions table={table} />

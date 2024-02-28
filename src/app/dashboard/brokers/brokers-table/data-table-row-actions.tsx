@@ -1,39 +1,32 @@
 "use client";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { type Row } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { brokerSchema } from "../data/schema";
+import { type Table } from "@tanstack/react-table";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
-  propertyId: string;
+  brokerId: string;
+  table: Table<TData>;
 }
 
 export function DataTableRowActions<TData>({
-  row,
-  propertyId,
+  brokerId,
+  table,
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter();
-  const brokers = brokerSchema.parse(row.original);
   const { mutateAsync } = api.brokers.delete.useMutation({
     onSuccess: (params) => {
       toast.success(`Deleted Broker ${params.name}`);
@@ -53,11 +46,17 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            table.options.meta?.editBroker(brokerId);
+          }}
+        >
+          Edit
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
-            await mutateAsync({ brokerId: propertyId });
+            await mutateAsync({ brokerId: brokerId });
           }}
         >
           Delete

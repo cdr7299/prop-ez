@@ -22,19 +22,38 @@ import DotLoader from "~/components/dot-loader";
 
 const formSchema = z.object({
   name: z.string().min(1),
-  phoneNumber: z.string().min(10).max(10).optional(),
+  phoneNumber: z
+    .string()
+    .min(10, "Phone number should be at least 10 digits")
+    .max(10, "Phone number should be at most 10 digits")
+    .optional()
+    .or(z.literal("")),
 });
 
 export function AddBrokerForm({
   brokers,
   setOpen,
+  isEditMode = false,
+  editBrokerId,
 }: {
   brokers: BrokerEntity[];
   setOpen: (arg: boolean) => void;
+  isEditMode?: boolean;
+  editBrokerId?: BrokerEntity["id"];
 }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: async () => {
+      if (isEditMode) {
+        const broker = brokers.find((b) => b.id === editBrokerId);
+        return {
+          name: broker?.name ?? "",
+          phoneNumber: broker?.phoneNumber ?? "",
+        };
+      }
+      return {} as z.infer<typeof formSchema>;
+    },
   });
 
   const { isLoading, mutateAsync } = api.brokers.create.useMutation({
@@ -47,8 +66,22 @@ export function AddBrokerForm({
       router.refresh();
     },
   });
+  const { isLoading: isUpdating, mutateAsync: mutateAsyncUpdate } =
+    api.brokers.update.useMutation({
+      onError: () => {
+        toast.error("Failed to update broker :(");
+      },
+      onSuccess: (params) => {
+        setOpen(false);
+        toast.success(`Updated ${params.name} !`);
+        router.refresh();
+      },
+    });
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await mutateAsync(values);
+    if (isEditMode) {
+      await mutateAsyncUpdate({ ...values, brokerId: editBrokerId ?? "" });
+    } else await mutateAsync(values);
   }
 
   return (
@@ -62,7 +95,7 @@ export function AddBrokerForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Broker Name</FormLabel>
+              <FormLabel>Broker Name *</FormLabel>
               <FormControl>
                 <Input placeholder="ex. Ashish Sharma" {...field} />
               </FormControl>
@@ -86,8 +119,8 @@ export function AddBrokerForm({
         />
 
         <Button type="submit" variant="default" size="lg">
-          {!isLoading && "Submit"}
-          {isLoading && <DotLoader />}
+          {!isLoading && !isUpdating && "Submit"}
+          {(isLoading || isUpdating) && <DotLoader />}
         </Button>
       </form>
     </Form>

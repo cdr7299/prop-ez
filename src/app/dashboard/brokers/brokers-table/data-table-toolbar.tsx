@@ -11,7 +11,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import AlertDialogDeleteBroker from "../add-broker/alert-dialog-delete-broker";
+import AlertDialogDeleteBroker from "../alert-dialog-delete-broker";
 import { brokerSchema } from "../data/schema";
 
 interface DataTableToolbarProps<TData> {
@@ -64,7 +64,7 @@ export function DataTableToolbar<TData>({
               setOpen(true);
             }}
           >
-            Delete Multiple items
+            Delete
           </Button>
         )}
         <DataTableViewOptions table={table} />
