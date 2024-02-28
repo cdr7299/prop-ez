@@ -48,8 +48,7 @@ export function DataTableToolbar<TData>({
   });
 
   const onDeleteMultiple = async () => {
-    console.log(selectedRows);
-    // @ts-expect-error tanstack not exposing types correct
+    // @ts-expect-error tanstack not exposing types correctly
     const propertyIds = selectedRows.map((row) => row.original.id as string);
     await mutateAsync(propertyIds);
   };

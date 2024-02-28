@@ -17,7 +17,11 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { AddPropertyCombobox } from "./_components/add-property-form-combobox";
-import { type Locations, type Category } from "@prisma/client";
+import {
+  type Locations,
+  type Category,
+  type BrokerEntity,
+} from "@prisma/client";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -34,7 +38,7 @@ const formSchema = z.object({
   address: z.string().min(5),
   categoryId: z.string(),
   locationId: z.string(),
-  brokerName: z.string(),
+  brokerEntityId: z.string(),
   pricePerSqFt: z.number(),
   calculatedPrice: z.number(),
 });
@@ -42,10 +46,12 @@ const formSchema = z.object({
 export function AddPropertyForm({
   categories,
   locations,
+  brokers,
   setOpen,
 }: {
   categories: Category[];
   locations: Locations[];
+  brokers: BrokerEntity[];
   setOpen: (arg: boolean) => void;
 }) {
   const router = useRouter();
@@ -53,6 +59,7 @@ export function AddPropertyForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
+      floors: 0,
     },
   });
   const watchLength = form.watch("length");
@@ -240,20 +247,23 @@ export function AddPropertyForm({
         {/* additional fields  */}
         <FormField
           control={form.control}
-          name="brokerName"
+          name="brokerEntityId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Broker Name</FormLabel>
+            <FormItem className="flex basis-1/2 flex-col gap-2">
+              <FormLabel>Select Broker</FormLabel>
               <FormControl>
-                <Input placeholder="ex. Satish Kumar" {...field} />
+                <AddPropertyCombobox
+                  placeholder="Select Broker.."
+                  data={brokers}
+                  value={field.value}
+                  setValue={(val) => form.setValue("brokerEntityId", val)}
+                />
               </FormControl>
-              <FormDescription>
-                You can also use Whatsapp Group Names
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <div className="flex justify-between gap-4">
           <FormField
             control={form.control}
@@ -291,7 +301,7 @@ export function AddPropertyForm({
             )}
           />
         </div>
-        <Button type="submit">
+        <Button type="submit" variant="default" size="lg">
           {!isLoading && "Submit"}
           {isLoading && <DotLoader />}
         </Button>

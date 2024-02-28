@@ -1,6 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { api } from "~/trpc/server";
 import TabsContentCustom from "./_components/tab-content-custom";
+import Link from "next/link";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import TabsContentCustomCategories from "./_components/tab-content-custom-categories";
 
 export default async function DashboardSettings() {
   const locations = await api.locations.list.query();
@@ -10,7 +13,14 @@ export default async function DashboardSettings() {
   return (
     <div className="flex  size-full max-w-screen-2xl flex-col items-center justify-center">
       <Tabs defaultValue="Locations" className="flex size-full">
-        <TabsList className="flex h-full flex-col justify-start gap-6 rounded-none border-x-[1px] !bg-inherit p-6">
+        <TabsList className="flex h-full flex-col justify-start gap-4 rounded-none border-x-[1px] !bg-inherit px-6 py-4">
+          <Link
+            href="/dashboard"
+            className="flex w-full items-center gap-2 self-start text-xs font-extrabold underline-offset-4 hover:underline"
+          >
+            <ArrowLeftIcon className="size-3" />
+            Back
+          </Link>
           <TabsTrigger value="Locations">Manage Locations</TabsTrigger>
           <TabsTrigger value="Categories">Manage Categories</TabsTrigger>
         </TabsList>
@@ -21,7 +31,7 @@ export default async function DashboardSettings() {
           label={"Location"}
           accessor="locationId"
         />
-        <TabsContentCustom
+        <TabsContentCustomCategories
           value="Categories"
           data={categories}
           properties={properties}
