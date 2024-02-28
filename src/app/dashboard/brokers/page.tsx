@@ -9,7 +9,7 @@ export default async function Page() {
   const brokers = await api.brokers.list.query();
 
   return (
-    <div className="flex size-full max-w-screen-2xl flex-col gap-8 py-4">
+    <div className="flex size-full max-w-screen-2xl flex-col gap-8 p-4">
       <Link
         href="/dashboard"
         className="text-normal flex w-full items-center gap-2 self-start font-extrabold underline-offset-4 hover:underline"

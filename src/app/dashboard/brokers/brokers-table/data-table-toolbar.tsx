@@ -64,7 +64,7 @@ export function DataTableToolbar<TData>({
               setOpen(true);
             }}
           >
-            Delete Multiple items
+            Delete
           </Button>
         )}
         <DataTableViewOptions table={table} />

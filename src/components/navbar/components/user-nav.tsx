@@ -34,7 +34,7 @@ export function UserNav({ session }: { session: Session }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
           <Avatar className="h-9 w-9">
             <AvatarImage src={session.user.image ?? ""} alt={initials} />
             <AvatarFallback>{initials}</AvatarFallback>
