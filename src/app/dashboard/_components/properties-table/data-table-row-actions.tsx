@@ -1,7 +1,7 @@
 "use client";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { type Row } from "@tanstack/react-table";
+import { type Table, type Row } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-import { labels, statuses } from "../../data/data";
+import { statuses } from "../../data/data";
 import { propertySchema } from "../../data/schema";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
@@ -28,11 +28,13 @@ import { useRouter } from "next/navigation";
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   propertyId: string;
+  table: Table<TData>;
 }
 
 export function DataTableRowActions<TData>({
   row,
   propertyId,
+  table,
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter();
   const properties = propertySchema.parse(row.original);
@@ -55,7 +57,13 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            table.options.meta?.editProperty(propertyId);
+          }}
+        >
+          Edit
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>

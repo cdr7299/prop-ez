@@ -21,6 +21,40 @@ export const propertiesRouter = createTRPCRouter({
         where: { id: input.propertyId },
       });
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        title: z.string().min(2, {
+          message: "Title must be at least 2 characters.",
+        }),
+        length: z.number(),
+        width: z.number(),
+        floors: z.number().int({ message: "Floors can be integers only" }),
+        address: z.string().min(5),
+        categoryId: z.string(),
+        locationId: z.string(),
+        brokerEntityId: z.string().optional(),
+        pricePerSqFt: z.number(),
+        propertyId: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.propertyItem.update({
+        where: { id: input.propertyId },
+        data: {
+          pricePerSqFt: input.pricePerSqFt,
+          length: input.length,
+          width: input.width,
+          locationId: input.locationId,
+          categoryId: input.categoryId,
+          brokerEntityId:
+            input.brokerEntityId === "" ? undefined : input.brokerEntityId,
+          floors: input.floors,
+          address: input.address,
+          title: input.title,
+        },
+      });
+    }),
   create: protectedProcedure
     .input(
       z.object({

@@ -21,6 +21,7 @@ import {
   type Locations,
   type Category,
   type BrokerEntity,
+  type PropertyItem,
 } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
@@ -47,18 +48,38 @@ export function AddPropertyForm({
   categories,
   locations,
   brokers,
+  properties,
   setOpen,
+  isEditMode = false,
+  editPropertyId,
 }: {
   categories: Category[];
+  properties?: PropertyItem[]; // only need to pass when editing data
   locations: Locations[];
   brokers: BrokerEntity[];
   setOpen: (arg: boolean) => void;
+  isEditMode?: boolean;
+  editPropertyId?: string;
 }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
+    defaultValues: async () => {
+      if (isEditMode) {
+        const property = properties?.find((b) => b.id === editPropertyId);
+        return {
+          title: property?.title ?? "",
+          length: property?.length ?? 0,
+          width: property?.width ?? 0,
+          floors: property?.floors ?? 0,
+          address: property?.address ?? "",
+          categoryId: property?.categoryId ?? "",
+          locationId: property?.locationId ?? "",
+          brokerEntityId: property?.brokerEntityId ?? "",
+          pricePerSqFt: property?.pricePerSqFt ?? 0,
+        };
+      }
+      return {} as z.infer<typeof formSchema>;
     },
   });
   // const categoryConfigs = api.categoriesConfig.list.useQuery();
@@ -92,8 +113,22 @@ export function AddPropertyForm({
       router.refresh();
     },
   });
+
+  const { isLoading: isUpdating, mutateAsync: mutateAsyncUpdate } =
+    api.properties.update.useMutation({
+      onError: () => {
+        toast.error("Failed to update property :(");
+      },
+      onSuccess: (params) => {
+        setOpen(false);
+        toast.success(`Successfull updated ${params.title} property!`);
+        router.refresh();
+      },
+    });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await mutateAsync(values);
+    if (isEditMode) {
+      await mutateAsyncUpdate({ ...values, propertyId: editPropertyId ?? "" });
+    } else await mutateAsync(values);
   }
 
   const setCategoryValue = useCallback(
@@ -314,8 +349,8 @@ export function AddPropertyForm({
           />
         </div>
         <Button type="submit" variant="default" size="lg">
-          {!isLoading && "Submit"}
-          {isLoading && <DotLoader />}
+          {!isLoading && !isUpdating && "Submit"}
+          {(isLoading || isUpdating) && <DotLoader />}
         </Button>
       </form>
     </Form>
