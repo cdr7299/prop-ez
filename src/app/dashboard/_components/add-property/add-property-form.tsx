@@ -182,7 +182,7 @@ export function AddPropertyForm({
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-between gap-6">
+        <div className="flex items-center justify-between gap-2 sm:gap-6">
           <FormField
             control={form.control}
             name="locationId"
@@ -222,13 +222,13 @@ export function AddPropertyForm({
         </div>
 
         {/* dimensions */}
-        <div className="flex justify-between gap-6">
+        <div className="grid grid-cols-2 grid-rows-2 items-center justify-between gap-6 md:flex-nowrap">
           <FormField
             control={form.control}
             name="floors"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Number of Floors *</FormLabel>
+                <FormLabel>Floors *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="ex. 2"
