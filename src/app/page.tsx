@@ -9,7 +9,7 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="container flex max-w-screen-2xl flex-col items-center justify-center gap-12 px-4 py-16 ">
         <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Welcome to <span className="text-accent">Trakr</span>
           </h1>
           <h3 className="text-xl font-bold">
