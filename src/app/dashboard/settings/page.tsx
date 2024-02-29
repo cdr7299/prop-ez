@@ -13,7 +13,7 @@ export default async function DashboardSettings() {
   return (
     <div className="flex size-full max-w-screen-2xl flex-col items-center justify-center">
       <Tabs defaultValue="Locations" className="flex size-full">
-        <TabsList className="flex h-full flex-col justify-start gap-4 rounded-none border-x-[1px] !bg-inherit px-6 py-4">
+        <TabsList className="flex h-full flex-col justify-start gap-4 rounded-none border-x-[1px] !bg-inherit py-4 sm:px-6">
           <Link
             href="/dashboard"
             className="text-normal flex w-full items-center gap-2 self-start font-extrabold underline-offset-4 hover:underline"
