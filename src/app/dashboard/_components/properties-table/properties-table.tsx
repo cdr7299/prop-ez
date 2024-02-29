@@ -28,10 +28,12 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import {
+  type PropertyItem,
   type BrokerEntity,
   type Category,
   type Locations,
 } from "@prisma/client";
+import { EditProperty } from "../edit-property";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,15 +41,20 @@ interface DataTableProps<TData, TValue> {
   locations: Locations[];
   categories: Category[];
   brokers: BrokerEntity[];
+  properties: PropertyItem[];
 }
 
-export function DataTable<TData, TValue>({
+export function PropertiesTable<TData, TValue>({
   columns,
   data,
   locations,
   categories,
   brokers,
+  properties,
 }: DataTableProps<TData, TValue>) {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [editPropertyId, setEditPropertyId] = React.useState<string>("");
+
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
@@ -82,6 +89,15 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    meta: {
+      editProperty(propertyId) {
+        setOpen(true);
+        setEditPropertyId(propertyId);
+      },
+      editBroker() {
+        return;
+      },
+    },
   });
 
   return (
@@ -143,6 +159,15 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+      <EditProperty
+        categories={categories}
+        locations={locations}
+        brokers={brokers}
+        properties={properties}
+        editPropertyId={editPropertyId}
+        open={open}
+        setOpen={setOpen}
+      />
     </div>
   );
 }

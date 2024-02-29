@@ -254,8 +254,12 @@ export const columns: ColumnDef<PropertyItem>[] = [
   // },
   {
     id: "actions",
-    cell: ({ row }) => (
-      <DataTableRowActions row={row} propertyId={row.original.id} />
+    cell: ({ row, table }) => (
+      <DataTableRowActions
+        row={row}
+        propertyId={row.original.id}
+        table={table}
+      />
     ),
   },
 ];

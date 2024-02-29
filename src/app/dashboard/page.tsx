@@ -1,5 +1,5 @@
 import { columns } from "./_components/properties-table/columns";
-import { DataTable } from "./_components/properties-table/data-table";
+import { PropertiesTable } from "./_components/properties-table/properties-table";
 import { type Metadata } from "next";
 import { api } from "~/trpc/server";
 import { Button } from "~/components/ui/button";
@@ -73,12 +73,13 @@ export default async function Dashboard() {
           </div>
         </div>
         <DashboardCards />
-        <DataTable
+        <PropertiesTable
           data={propertiesFinal}
           columns={columns}
           locations={locations}
           categories={categories}
           brokers={brokers}
+          properties={properties}
         />
       </div>
     </div>

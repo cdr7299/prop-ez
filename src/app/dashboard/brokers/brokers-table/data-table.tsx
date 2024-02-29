@@ -14,7 +14,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  type RowData,
 } from "@tanstack/react-table";
 
 import {
@@ -30,12 +29,6 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { type BrokerEntity } from "@prisma/client";
 import { EditBroker } from "../edit-broker";
-
-declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends RowData> {
-    editBroker: (brokerId: string) => void;
-  }
-}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -89,6 +82,10 @@ export function DataTable<TData, TValue>({
       editBroker: (brokerId) => {
         setOpen(true);
         setEditBrokerId(brokerId);
+      },
+      editProperty: () => {
+        // find a way so we don't need to add this
+        return;
       },
     },
   });
