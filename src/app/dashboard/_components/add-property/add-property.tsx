@@ -16,6 +16,7 @@ import {
   type Category,
   type BrokerEntity,
 } from "@prisma/client";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
 
 export function AddProperty({
   categories,
@@ -30,7 +31,11 @@ export function AddProperty({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Add Property</Button>
+        <Button variant="default" className=" items-center gap-2">
+          {" "}
+          <PlusCircledIcon />
+          Add Property
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
