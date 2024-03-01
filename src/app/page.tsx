@@ -12,7 +12,7 @@ export default async function Home() {
           <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Welcome to <span className="text-accent">Trakr</span>
           </h1>
-          <h3 className="text-xl font-bold">
+          <h3 className="font-bold sm:text-xl">
             Track Real estate with <span className="text-accent">ease.</span>
           </h3>
         </div>

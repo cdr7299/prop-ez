@@ -30,7 +30,7 @@ const categoryNames = [
   "Warehouse",
 ];
 
-const createdById = "clt51d2eb00009f7hsimxmx5n"; // IMPORTANT : add the user before the script runs
+const createdById = "clt82t34r0000r8sdbfx7xroy"; // IMPORTANT : add the user before the script runs
 
 async function main() {
   const seedProperties: PropertyItem[] = [];
