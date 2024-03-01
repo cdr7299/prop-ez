@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Settings } from "lucide-react";
 import { AddProperty } from "./_components/add-property/add-property";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
-import { ArchiveIcon, IdCardIcon } from "@radix-ui/react-icons";
+import { IdCardIcon } from "@radix-ui/react-icons";
 
 export const metadata: Metadata = {
   title: "Properties",

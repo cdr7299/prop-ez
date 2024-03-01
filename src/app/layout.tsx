@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "../lib/_providers/ThemeProvider";
 import Navbar from "~/components/navbar";
 import { getServerAuthSession } from "~/server/auth";
+import Footer from "~/components/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,11 +36,12 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Navbar session={session} />
           <TRPCReactProvider>
-            <Navbar session={session} />
             {children}
             <Toaster duration={3000} />
           </TRPCReactProvider>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
