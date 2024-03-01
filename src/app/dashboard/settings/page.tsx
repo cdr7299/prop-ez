@@ -9,7 +9,6 @@ export default async function DashboardSettings() {
   const locations = await api.locations.list.query();
   const categories = await api.categories.list.query();
   const properties = await api.properties.list.query();
-
   return (
     <div className="flex size-full max-w-screen-2xl flex-col items-center justify-center">
       <Tabs defaultValue="Locations" className="flex size-full">

@@ -8,7 +8,7 @@ export default async function Layout({
   const session = await getServerAuthSession();
 
   return (
-    <main className="mt-[4.5rem] flex h-[calc(100vh-4.5rem)] w-full flex-col items-center">
+    <main className="mt-[4.5rem] flex min-h-[calc(100vh-4.5rem)] w-full flex-col items-center">
       {session ? (
         children
       ) : (

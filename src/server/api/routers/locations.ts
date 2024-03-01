@@ -6,7 +6,6 @@ export const locationsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
       const location = await ctx.db.locations.create({
         data: { name: input.name, createdById: ctx.session?.user.id ?? "" },
       });
@@ -21,7 +20,9 @@ export const locationsRouter = createTRPCRouter({
         },
       });
     }),
-  list: protectedProcedure.query(({ ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
+
     return ctx.db.locations.findMany({
       where: { createdBy: { id: ctx.session.user.id } },
     });
