@@ -1,8 +1,15 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const categoriesRouter = createTRPCRouter({
+  listPublic: publicProcedure.query(({ ctx }) => {
+    return ctx.db.category.findMany();
+  }),
   create: protectedProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
