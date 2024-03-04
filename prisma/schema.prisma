@@ -124,20 +124,21 @@ model PropertyItem {
   pricePerSqFt   Float?
 }
 
-// TODO use createdBy rather than user & user userId
-
 model Locations {
   id          String         @id @default(cuid())
   name        String         @unique
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
   properties  PropertyItem[]
   createdBy   User           @relation(fields: [createdById], references: [id])
   createdById String
 }
 
-// TODO use createdBy rather than user & user userId
 model Category {
   id             String          @id @default(cuid())
   name           String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
   properties     PropertyItem[]
   createdBy      User            @relation(fields: [createdById], references: [id])
   createdById    String
@@ -161,6 +162,8 @@ model Status {
 
 model BrokerEntity {
   id           String         @id @default(cuid())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
   name         String         @unique
   createdBy    User           @relation(fields: [createdById], references: [id]) //createdBy
   createdById  String

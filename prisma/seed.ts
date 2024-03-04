@@ -30,7 +30,7 @@ const categoryNames = [
   "Warehouse",
 ];
 
-const createdById = "clt82t34r0000r8sdbfx7xroy"; // IMPORTANT : add the user before the script runs
+const createdById = "cltdll70u00007nfhn9q9k2po"; // IMPORTANT : add the user before the script runs
 
 async function main() {
   const seedProperties: PropertyItem[] = [];
@@ -42,6 +42,8 @@ async function main() {
   for (let i = 0; i < amountOfCategories; i++) {
     const categories: Category = {
       id: faker.string.uuid(),
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
       name: categoryNames[i] ?? "",
       createdById: createdById,
     };
@@ -69,6 +71,8 @@ async function main() {
   for (let i = 0; i < amountOfLocations; i++) {
     const location: Locations = {
       id: faker.string.uuid(),
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
       name: locationNames[i] ?? "",
       createdById: createdById,
     };
@@ -86,6 +90,8 @@ async function main() {
   for (let i = 0; i < amountOfBrokers; i++) {
     const broker: BrokerEntity = {
       id: faker.string.uuid(),
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
       name: faker.person.fullName(),
       createdById: createdById,
       phoneNumber: faker.phone.number(),

@@ -19,6 +19,7 @@ import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { propertySchema } from "../../data/schema";
+import { DataTableUnitsOptions } from "./data-table-units-options";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -121,6 +122,7 @@ export function DataTableToolbar<TData>({
             Delete
           </Button>
         )}
+        <DataTableUnitsOptions table={table} />
         <DataTableViewOptions table={table} />
       </div>
       <AlertDialogDeleteProperty

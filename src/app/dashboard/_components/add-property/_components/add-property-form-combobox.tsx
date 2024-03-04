@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -18,6 +17,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
 export function AddPropertyCombobox({
   placeholder,
@@ -44,7 +44,7 @@ export function AddPropertyCombobox({
           className="w-full justify-between"
         >
           {value ? data.find((item) => item.id === value)?.name : placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0" sideOffset={5}>
@@ -73,7 +73,7 @@ export function AddPropertyCombobox({
                     setOpen(false);
                   }}
                 >
-                  <Check
+                  <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
                       value === item.id ? "opacity-100" : "opacity-0",

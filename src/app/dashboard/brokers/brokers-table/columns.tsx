@@ -7,6 +7,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type BrokerSchema } from "../data/schema";
+import { getLocalDateTime } from "~/lib/date.utils";
 
 export const columns: ColumnDef<BrokerSchema>[] = [
   {
@@ -33,7 +34,20 @@ export const columns: ColumnDef<BrokerSchema>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date Added" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-full">
+        {getLocalDateTime(row.getValue("createdAt"))}
+      </div>
+    ),
 
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "name",
     header: ({ column }) => (
