@@ -82,7 +82,10 @@ export default function TabsContentCustomCategories({
   };
 
   return (
-    <TabsContent value={value} className="w-full py-6">
+    <TabsContent
+      value={value}
+      className="w-full sm:min-h-[calc(100vh-4.5rem)] sm:py-6"
+    >
       <div className="w-full border-b-2 px-4 py-4 text-2xl font-bold">
         {value}
       </div>
