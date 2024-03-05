@@ -7,7 +7,7 @@ export default function Footer() {
         </div>
         <div className="flex w-full gap-6 md:gap-12">
           <h4 className="cursor-pointer text-sm underline-offset-2 hover:underline">
-            Terms of use
+            Terms of use new
           </h4>
           <h4 className="cursor-pointer text-sm underline-offset-2 hover:underline">
             Privacy Policy
