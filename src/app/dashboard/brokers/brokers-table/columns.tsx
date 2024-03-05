@@ -34,20 +34,7 @@ export const columns: ColumnDef<BrokerSchema>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date Added" />
-    ),
-    cell: ({ row }) => (
-      <div className="w-full">
-        {getLocalDateTime(row.getValue("createdAt"))}
-      </div>
-    ),
 
-    enableSorting: true,
-    enableHiding: true,
-  },
   {
     accessorKey: "name",
     header: ({ column }) => (

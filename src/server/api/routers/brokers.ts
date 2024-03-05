@@ -59,7 +59,7 @@ export const brokersRouter = createTRPCRouter({
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.brokerEntity.findMany({
       orderBy: {
-        createdAt: "desc",
+        name: "asc",
       },
       where: { createdBy: { id: ctx.session.user.id } },
     });

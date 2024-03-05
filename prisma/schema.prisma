@@ -63,17 +63,6 @@ model VerificationToken {
 
 // App models
 
-model Post {
-  id          Int      @id @default(autoincrement())
-  name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String
-
-  @@index([name])
-}
-
 model User {
   id             String          @id @default(cuid())
   name           String?
@@ -82,7 +71,6 @@ model User {
   image          String?
   accounts       Account[]
   sessions       Session[]
-  posts          Post[]
   properties     PropertyItem[]
   role           Role            @default(BASIC)
   UserPreference UserPreference?

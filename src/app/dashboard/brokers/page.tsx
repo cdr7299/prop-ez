@@ -18,7 +18,7 @@ export default async function Page() {
     <div className="flex size-full max-w-screen-2xl flex-col gap-8 p-4">
       <Link
         href="/dashboard"
-        className="text-normal flex w-full items-center gap-2 self-start font-extrabold underline-offset-4 hover:underline"
+        className="flex w-full items-center gap-1 self-start text-xs font-bold underline-offset-4 hover:underline sm:gap-2 sm:text-sm"
       >
         <ArrowLeftIcon className="size-3" />
         Back

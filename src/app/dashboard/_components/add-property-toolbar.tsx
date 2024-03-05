@@ -29,7 +29,8 @@ export default function AddPropertyToolbar({
       <div className="flex items-center gap-2">
         <Button variant="secondary" className="items-center gap-2" asChild>
           <Link href="/dashboard/brokers" className="text-sm">
-            Brokers <IdCardIcon className="size-5" />
+            <IdCardIcon className="size-5" />
+            Brokers
           </Link>
         </Button>
         {/* <Button variant="secondary" asChild className="items-center gap-2">
@@ -38,8 +39,8 @@ export default function AddPropertyToolbar({
               </Link>
             </Button> */}
         <Button variant="secondary" asChild>
-          <Link href="/dashboard/settings">
-            <GearIcon className="size-4" />
+          <Link href="/dashboard/settings" className="flex items-center gap-2">
+            <GearIcon className="size-4" /> Settings
           </Link>
         </Button>
       </div>
