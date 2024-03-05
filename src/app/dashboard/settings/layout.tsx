@@ -10,10 +10,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         orientation="vertical"
         className="size-full max-w-screen-2xl sm:flex"
       >
-        <TabsList className="mt-5 flex flex-col gap-2 rounded-none border-x-[1px] !bg-inherit py-2 sm:mt-0 sm:min-h-[calc(100vh-4.5rem)] sm:flex-col sm:justify-start sm:gap-4 sm:px-6 sm:py-4">
+        <TabsList className="mt-5 flex flex-col gap-2 rounded-none border-x-[1px] !bg-inherit py-2 sm:mt-0 sm:min-h-[calc(100vh-4.5rem)] sm:flex-col sm:justify-start sm:gap-4 sm:px-2 sm:py-4">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1 self-start text-xs font-extrabold underline-offset-4 hover:underline sm:gap-2 sm:text-sm"
+            className="flex items-center gap-1 self-start text-xs font-bold underline-offset-4 hover:underline sm:gap-2 sm:text-sm"
           >
             <ArrowLeftIcon className="size-3" />
             Back

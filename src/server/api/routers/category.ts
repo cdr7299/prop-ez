@@ -29,6 +29,7 @@ export const categoriesRouter = createTRPCRouter({
     }),
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.category.findMany({
+      orderBy: { name: "asc" },
       where: { createdBy: { id: ctx.session.user.id } },
     });
   }),

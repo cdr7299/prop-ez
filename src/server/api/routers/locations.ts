@@ -21,9 +21,8 @@ export const locationsRouter = createTRPCRouter({
       });
     }),
   list: protectedProcedure.query(async ({ ctx }) => {
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
-
     return ctx.db.locations.findMany({
+      orderBy: { name: "asc" },
       where: { createdBy: { id: ctx.session.user.id } },
     });
   }),
