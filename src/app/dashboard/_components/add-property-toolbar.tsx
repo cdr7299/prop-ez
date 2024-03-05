@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { GearIcon } from "@radix-ui/react-icons";
 import { AddProperty } from "./add-property/add-property";
 import { Button } from "~/components/ui/button";
 
@@ -39,7 +39,7 @@ export default function AddPropertyToolbar({
             </Button> */}
         <Button variant="secondary" asChild>
           <Link href="/dashboard/settings">
-            <Settings className="size-4" />
+            <GearIcon className="size-4" />
           </Link>
         </Button>
       </div>

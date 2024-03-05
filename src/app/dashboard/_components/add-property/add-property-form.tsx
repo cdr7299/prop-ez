@@ -150,38 +150,42 @@ export function AddPropertyForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col space-y-4"
       >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Property Title *</FormLabel>
-              <FormControl>
-                <Input placeholder="Some info about property.." {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your unique property title.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address *</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="ex. 8355 - St. 18, Durga Puri, Haibowal"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex justify-between gap-6 md:flex-nowrap">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Property Title *</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g. Good location, good rate, bank held etc"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Address *</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="ex. 8355 - St. 18, Durga Puri"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <div className="flex items-center justify-between gap-2 sm:gap-6">
           <FormField
             control={form.control}
@@ -222,7 +226,7 @@ export function AddPropertyForm({
         </div>
 
         {/* dimensions */}
-        <div className="grid grid-cols-2 grid-rows-2 items-center justify-between gap-6 md:flex-nowrap">
+        <div className="grid-rows-auto grid grid-cols-4 items-center justify-between gap-6">
           <FormField
             control={form.control}
             name="floors"

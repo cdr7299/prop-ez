@@ -37,7 +37,7 @@ export function AddProperty({
           Add Property
         </Button>
       </DialogTrigger>
-      <DialogContent className="px-2 py-6 sm:max-w-[625px] sm:px-4 sm:py-6">
+      <DialogContent className="px-2 py-6 sm:max-w-[70%] sm:px-4 sm:py-6">
         <DialogHeader>
           <DialogTitle>Add New Property</DialogTitle>
           <DialogDescription>

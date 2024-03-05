@@ -8,6 +8,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type PropertyItem } from "../../data/schema";
+import { getLocalDateTime } from "~/lib/date.utils";
 
 export const columns: ColumnDef<PropertyItem>[] = [
   {
@@ -33,6 +34,20 @@ export const columns: ColumnDef<PropertyItem>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date Added" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-full">
+        {getLocalDateTime(row.getValue("createdAt"))}
+      </div>
+    ),
+
+    enableSorting: true,
+    enableHiding: true,
   },
   {
     accessorKey: "location",
@@ -97,6 +112,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+
   {
     accessorKey: "category",
     header: ({ column }) => (

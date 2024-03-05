@@ -2,8 +2,14 @@ import { api } from "~/trpc/server";
 import { DataTable } from "./brokers-table/data-table";
 import { columns } from "./brokers-table/columns";
 import { AddBroker } from "./add-broker";
-import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Brokers",
+  description: "All saved brokers",
+};
 
 export default async function Page() {
   const brokers = await api.brokers.list.query();
