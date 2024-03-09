@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PropertyStatusZodType } from "~/app/_types/properties";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -36,6 +37,7 @@ export const propertiesRouter = createTRPCRouter({
         brokerEntityId: z.string().optional(),
         pricePerSqFt: z.number(),
         propertyId: z.string().min(1),
+        status: PropertyStatusZodType,
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -52,6 +54,22 @@ export const propertiesRouter = createTRPCRouter({
           floors: input.floors,
           address: input.address,
           title: input.title,
+          status: input.status,
+        },
+      });
+    }),
+  updateStatus: protectedProcedure
+    .input(
+      z.object({
+        propertyId: z.string().min(1),
+        status: PropertyStatusZodType,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.propertyItem.update({
+        where: { id: input.propertyId },
+        data: {
+          status: input.status,
         },
       });
     }),
@@ -100,6 +118,7 @@ export const propertiesRouter = createTRPCRouter({
 
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.findMany({
+      take: 1000,
       orderBy: { createdAt: "desc" },
       where: {
         createdBy: { id: ctx.session.user.id },
@@ -113,4 +132,36 @@ export const propertiesRouter = createTRPCRouter({
       where: { createdBy: { id: ctx.session.user.id } },
     });
   }),
+
+  infiniteProperties: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { limit, skip, cursor } = input;
+      const items = await ctx.db.propertyItem.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          id: "asc",
+        },
+        where: {
+          createdBy: { id: ctx.session.user.id },
+        },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+      return {
+        items,
+        nextCursor,
+      };
+    }),
 });

@@ -25,21 +25,19 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTablePagination } from "./customers-table-pagination";
+import { DataTableToolbar } from "./customers-table-toolbar";
 import { type BrokerEntity } from "@prisma/client";
-import { EditBroker } from "../edit-broker";
+// import { EditBroker } from "../edit-broker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  brokers: BrokerEntity[];
 }
 
-export function DataTable<TData, TValue>({
+export function CustomersTable<TData, TValue>({
   columns,
   data,
-  brokers,
 }: DataTableProps<TData, TValue>) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [editBrokerId, setEditBrokerId] = React.useState<string>("");
@@ -144,12 +142,12 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-      <EditBroker
+      {/* <EditBroker
         editBrokerId={editBrokerId}
         open={open}
         setOpen={setOpen}
         brokers={brokers}
-      />
+      /> */}
     </div>
   );
 }

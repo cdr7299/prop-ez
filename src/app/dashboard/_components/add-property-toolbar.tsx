@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GearIcon } from "@radix-ui/react-icons";
+import { GearIcon, PersonIcon } from "@radix-ui/react-icons";
 import { AddProperty } from "./add-property/add-property";
 import { Button } from "~/components/ui/button";
 
@@ -33,11 +33,14 @@ export default function AddPropertyToolbar({
             Brokers
           </Link>
         </Button>
-        {/* <Button variant="secondary" asChild className="items-center gap-2">
-              <Link href="/dashboard/archived" className="text-sm">
-              Archive <ArchiveIcon className="size-4" />
-              </Link>
-            </Button> */}
+        <Button variant="secondary" asChild className="items-center gap-2">
+          <Link
+            href="/dashboard/customers"
+            className="flex items-center text-sm"
+          >
+            <PersonIcon className="size-4" /> Customers
+          </Link>
+        </Button>
         <Button variant="secondary" asChild>
           <Link href="/dashboard/settings" className="flex items-center gap-2">
             <GearIcon className="size-4" /> Settings

@@ -12,6 +12,14 @@ enum Priority {
   high
 }
 
+enum PropertyStatus {
+  on_market
+  off_market
+  deal_in_progress
+  done
+  archived
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -64,20 +72,22 @@ model VerificationToken {
 // App models
 
 model User {
-  id             String          @id @default(cuid())
-  name           String?
-  email          String?         @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  properties     PropertyItem[]
-  role           Role            @default(BASIC)
-  UserPreference UserPreference?
-  Locations      Locations[]
-  Category       Category[]
-  BrokerEntity   BrokerEntity[]
-  CategoryConfig CategoryConfig?
+  id                 String               @id @default(cuid())
+  name               String?
+  email              String?              @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  properties         PropertyItem[]
+  role               Role                 @default(BASIC)
+  UserPreference     UserPreference?
+  Locations          Locations[]
+  Category           Category[]
+  BrokerEntity       BrokerEntity[]
+  CategoryConfig     CategoryConfig?
+  CustomerPreference CustomerPreference[]
+  Customer           Customer[]
 
   @@index([email])
 }
@@ -90,26 +100,50 @@ model UserPreference {
 }
 
 model PropertyItem {
-  id             String        @id @default(cuid())
+  id             String         @id @default(cuid())
   title          String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  address        String        @unique
-  createdBy      User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  address        String
+  createdBy      User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById    String
   length         Float?
   width          Float?
   floors         Int
-  Category       Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  Category       Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId     String
   priority       Priority?
-  status         Status?       @relation(fields: [statusId], references: [id])
-  statusId       String?
-  location       Locations     @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  status         PropertyStatus @default(on_market)
+  location       Locations      @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId     String
-  broker         BrokerEntity? @relation(fields: [brokerEntityId], references: [id])
+  broker         BrokerEntity?  @relation(fields: [brokerEntityId], references: [id])
   brokerEntityId String?
   pricePerSqFt   Float?
+  customers      Customer[]
+}
+
+model Customer {
+  id                   String              @id @default(cuid())
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @default(now()) @updatedAt
+  createdBy            User                @relation(fields: [createdById], references: [id])
+  name                 String
+  phoneNumber          String?
+  email                String?
+  PropertyItem         PropertyItem[]
+  customerPreferenceId String?
+  CustomerPreference   CustomerPreference?
+  createdById          String
+}
+
+model CustomerPreference {
+  id          String   @id @default(cuid())
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  Customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String   @unique
 }
 
 model Locations {
@@ -140,12 +174,6 @@ model CategoryConfig {
   categoryId  String   @unique
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdById String   @unique
-}
-
-model Status {
-  id         String         @id @default(cuid())
-  name       String         @unique
-  properties PropertyItem[]
 }
 
 model BrokerEntity {
