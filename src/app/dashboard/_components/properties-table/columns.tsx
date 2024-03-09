@@ -59,7 +59,9 @@ export const columns: ColumnDef<PropertyItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Location" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("location")}</div>,
+    cell: ({ row }) => (
+      <div className="max-w-32">{row.getValue("location")}</div>
+    ),
     filterFn: (row, id, value: string) => {
       // should infer value : string
       return value.includes(row.getValue(id));
@@ -73,18 +75,18 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Address" />
     ),
     cell: ({ row }) => (
-      <div className="flex w-full min-w-64 items-center gap-1">
-        <Badge variant="default" className="h-6 truncate">
+      <div className="flex max-w-72 items-center gap-2">
+        <Badge variant="default" className="p- min-h-6 break-words">
           <span className="!text-xs">{row.original.category}</span>
         </Badge>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <span className="block w-32 truncate text-left">
+              <span className="line-clamp-3 max-w-60 text-left">
                 {row.getValue("address")}
               </span>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="max-w-64">
               <span className="">{row.getValue("address")}</span>
             </TooltipContent>
           </Tooltip>
