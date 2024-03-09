@@ -80,12 +80,10 @@ export default function TabsContentCustomCategories({
   const { isLoading: isUpdatingCategories, mutateAsync: updateCategory } =
     api.categories.update.useMutation({
       async onError(params) {
-        toast.error(
-          `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
-        );
+        toast.error(`Unable to update, ${params.data?.code}`);
       },
       async onSuccess(params) {
-        toast.success(`Added ${params.name} successfully`);
+        toast.success(`Updated ${params.name} successfully`);
         setShowEditDialog(false);
         setEditDataId("");
         router.refresh();

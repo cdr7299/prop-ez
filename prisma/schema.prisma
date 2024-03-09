@@ -148,23 +148,27 @@ model CustomerPreference {
 
 model Locations {
   id          String         @id @default(cuid())
-  name        String         @unique
+  name        String
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @default(now()) @updatedAt
   properties  PropertyItem[]
   createdBy   User           @relation(fields: [createdById], references: [id])
   createdById String
+
+  @@unique([name, createdById])
 }
 
 model Category {
   id             String          @id @default(cuid())
-  name           String          @unique
+  name           String
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @default(now()) @updatedAt
   properties     PropertyItem[]
   createdBy      User            @relation(fields: [createdById], references: [id])
   createdById    String
   CategoryConfig CategoryConfig?
+
+  @@unique([name, createdById])
 }
 
 model CategoryConfig {
