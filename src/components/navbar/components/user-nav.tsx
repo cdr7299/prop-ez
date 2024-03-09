@@ -20,7 +20,7 @@ import {
 export function UserNav({ session }: { session: Session }) {
   const router = useRouter();
   const handleSignOut = async () => {
-    await signOut();
+    await signOut({ callbackUrl: "/" });
     router.push("/");
   };
   const initials = useMemo<string>(() => {

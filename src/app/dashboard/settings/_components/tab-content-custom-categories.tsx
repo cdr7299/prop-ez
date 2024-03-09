@@ -121,7 +121,7 @@ export default function TabsContentCustomCategories({
         {data.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-4 rounded-md bg-blue-200/70 px-4 py-1 text-sm font-semibold text-primary-foreground"
+            className="flex items-center gap-4 rounded-md bg-blue-200/70 px-4 py-1 text-sm font-semibold text-slate-800 dark:text-slate-100"
           >
             {item.name}
             <div className="flex items-center justify-center">
