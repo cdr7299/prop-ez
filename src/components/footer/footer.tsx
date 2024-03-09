@@ -10,7 +10,7 @@ export default function Footer() {
             Terms of use
           </h4>
           <h4 className="cursor-pointer text-sm underline-offset-2 hover:underline">
-            Privacy Policy
+            Privacy Policy123123
           </h4>
         </div>
       </div>

@@ -1,6 +1,6 @@
 ## Terms of Use
 
-By using our website, you agree to these Terms of Use. Please read them carefully.
+By using our asdasdas, you agree to these Terms of Use. Please read them carefully.
 
 ### Intellectual Property
 
