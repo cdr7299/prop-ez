@@ -1,19 +1,17 @@
-import { api } from "~/trpc/server";
-import { DataTable } from "./_components/brokers-table/data-table";
-import { columns } from "./_components/brokers-table/columns";
-import { AddBroker } from "./add-broker";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { type Metadata } from "next";
+import { api } from "~/trpc/server";
+import { CustomersTable } from "./_components/customers-table/customers-table";
+import { columns } from "./_components/customers-table/columns";
 
 export const metadata: Metadata = {
-  title: "Brokers",
-  description: "All saved brokers",
+  title: "Customers",
+  description: "All saved customers",
 };
 
 export default async function Page() {
-  const brokers = await api.brokers.list.query();
-
+  const customersWithProperties = await api.customers.list.query();
   return (
     <div className="flex size-full max-w-screen-2xl flex-col gap-8 p-4">
       <Link
@@ -25,14 +23,14 @@ export default async function Page() {
       </Link>
       <div className="flex items-center justify-between">
         <div className="flex w-full flex-col gap-2">
-          <h1 className="text-xl font-extrabold">Brokers</h1>
+          <h1 className="text-xl font-extrabold">Customers</h1>
           <h3 className="text-sm">
-            Here you can add, edit or modify saved brokers
+            Here you can add, edit or modify saved customers
           </h3>
         </div>
-        <AddBroker brokers={brokers} />
+        {/* <AddBroker brokers={brokers} /> */}
       </div>
-      <DataTable columns={columns} data={brokers} brokers={brokers} />
+      <CustomersTable columns={columns} data={customersWithProperties} />
     </div>
   );
 }

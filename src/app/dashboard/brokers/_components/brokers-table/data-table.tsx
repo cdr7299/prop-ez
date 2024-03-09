@@ -27,33 +27,22 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
-import {
-  type PropertyItem,
-  type BrokerEntity,
-  type Category,
-  type Locations,
-} from "@prisma/client";
-import { EditProperty } from "../edit-property";
+import { type BrokerEntity } from "@prisma/client";
+import { EditBroker } from "../../edit-broker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  locations: Locations[];
-  categories: Category[];
   brokers: BrokerEntity[];
-  properties: PropertyItem[];
 }
 
-export function PropertiesTable<TData, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
-  locations,
-  categories,
   brokers,
-  properties,
 }: DataTableProps<TData, TValue>) {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [editPropertyId, setEditPropertyId] = React.useState<string>("");
+  const [editBrokerId, setEditBrokerId] = React.useState<string>("");
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -63,7 +52,6 @@ export function PropertiesTable<TData, TValue>({
       width: false,
       brokerContactNumber: false,
       floors: false,
-      status: false,
     });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -91,11 +79,12 @@ export function PropertiesTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     meta: {
-      editProperty(propertyId) {
+      editBroker: (brokerId) => {
         setOpen(true);
-        setEditPropertyId(propertyId);
+        setEditBrokerId(brokerId);
       },
-      editBroker() {
+      editProperty: () => {
+        // find a way so we don't need to add this
         return;
       },
     },
@@ -103,12 +92,7 @@ export function PropertiesTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        locations={locations}
-        categories={categories}
-        brokers={brokers}
-      />
+      <DataTableToolbar table={table} />
       <div className="rounded-md border border-primary">
         <Table>
           <TableHeader>
@@ -160,14 +144,11 @@ export function PropertiesTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-      <EditProperty
-        categories={categories}
-        locations={locations}
-        brokers={brokers}
-        properties={properties}
-        editPropertyId={editPropertyId}
+      <EditBroker
+        editBrokerId={editBrokerId}
         open={open}
         setOpen={setOpen}
+        brokers={brokers}
       />
     </div>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
@@ -9,6 +8,12 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type PropertyItem } from "../../data/schema";
 import { getLocalDateTime } from "~/lib/date.utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 export const columns: ColumnDef<PropertyItem>[] = [
   {
@@ -41,7 +46,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Date Added" />
     ),
     cell: ({ row }) => (
-      <div className="w-full">
+      <div className="max-w-16">
         {getLocalDateTime(row.getValue("createdAt"))}
       </div>
     ),
@@ -59,7 +64,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
       // should infer value : string
       return value.includes(row.getValue(id));
     },
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -69,14 +74,49 @@ export const columns: ColumnDef<PropertyItem>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex w-full min-w-64 items-center gap-1">
-        <Badge variant="default" className="h-6">
-          {row.original.category}
+        <Badge variant="default" className="h-6 truncate">
+          <span className="!text-xs">{row.original.category}</span>
         </Badge>
-        {row.getValue("address")}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <span className="block w-32 truncate">
+                {row.getValue("address")}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span className="">{row.getValue("address")}</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
+  },
+  {
+    accessorKey: "title",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Title" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <span className="block w-32 truncate text-left">
+                  {row.getValue("title")}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span className=""> {row.getValue("title")}</span>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "price",
@@ -119,6 +159,18 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Category" />
     ),
     cell: ({ row }) => <div className="w-full">{row.getValue("category")}</div>,
+    filterFn: (row, id, value: string) => {
+      return value.includes(row.getValue(id));
+    },
+    enableSorting: false,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => <div className="w-full">{row.getValue("status")}</div>,
     filterFn: (row, id, value: string) => {
       return value.includes(row.getValue(id));
     },
@@ -173,7 +225,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Broker Name" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[150px] truncate">{row.getValue("brokerName")}</div>
+      <div className="max-w-[180px] truncate">{row.getValue("brokerName")}</div>
     ),
     filterFn: (row, id, value: string) => {
       return value.includes(row.getValue(id));
@@ -197,49 +249,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex space-x-2">
-          <span className="max-w-[150px] truncate font-medium">
-            {row.getValue("title")}
-          </span>
-        </div>
-      );
-    },
-  },
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Status" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const status = statuses.find(
-  //       (status) => status.value === row.getValue("status"),
-  //     );
 
-  //     if (!status) {
-  //       return null;
-  //     }
-
-  //     return (
-  //       <div className="flex w-[100px] items-center">
-  //         {status.icon && (
-  //           <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-  //         )}
-  //         <span>{status.label}</span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
   // {
   //   accessorKey: "priority",
   //   header: ({ column }) => (

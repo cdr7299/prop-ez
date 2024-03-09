@@ -15,7 +15,9 @@ export default async function Dashboard() {
   const locations = await api.locations.list.query();
   const categories = await api.categories.list.query();
   const properties = await api.properties.list.query();
+
   const brokers = await api.brokers.list.query();
+
   const propertiesFinal = properties.map((item) => ({
     ...item,
     area: (item.length ?? 0) * (item.width ?? 0),

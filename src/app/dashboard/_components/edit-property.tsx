@@ -13,6 +13,16 @@ import {
   type PropertyItem,
 } from "@prisma/client";
 
+interface EditPropertyProps {
+  categories: Category[];
+  locations: Locations[];
+  brokers: BrokerEntity[];
+  properties: Array<PropertyItem>;
+  editPropertyId: string;
+  open: boolean;
+  setOpen: (arg: boolean) => void;
+}
+
 export function EditProperty({
   categories,
   locations,
@@ -21,15 +31,7 @@ export function EditProperty({
   editPropertyId,
   open,
   setOpen,
-}: {
-  categories: Category[];
-  locations: Locations[];
-  brokers: BrokerEntity[];
-  properties: PropertyItem[];
-  editPropertyId: string;
-  open: boolean;
-  setOpen: (arg: boolean) => void;
-}) {
+}: EditPropertyProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[625px]">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { Cross2Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { type Table } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
@@ -13,6 +13,7 @@ import {
   type Category,
   type Locations,
 } from "@prisma/client";
+
 import AlertDialogDeleteProperty from "../alert-dialog-delete-property";
 import { useState } from "react";
 import { api } from "~/trpc/react";
@@ -20,6 +21,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { propertySchema } from "../../data/schema";
 import { DataTableUnitsOptions } from "./data-table-units-options";
+import { PropertyStatusOptions } from "~/app/_types/properties";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -67,16 +69,21 @@ export function DataTableToolbar<TData>({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-1 flex-wrap items-center gap-y-2 space-x-2 sm:flex-nowrap sm:gap-y-0">
-        <Input
-          placeholder="Search Properties by title..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+    <div className="flex items-start justify-between gap-y-4">
+      <div className="flex flex-wrap items-center gap-y-2 space-x-2 sm:gap-y-2">
+        <div className="relative flex items-center">
+          <MagnifyingGlassIcon className="absolute left-2 h-5 w-5 text-gray-400" />
+          <Input
+            placeholder="Enter address.."
+            value={
+              (table.getColumn("address")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("address")?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] pl-8 lg:w-[250px]"
+          />
+        </div>
         {table.getColumn("location") && (
           <DataTableFacetedFilter
             column={table.getColumn("location")}
@@ -98,11 +105,18 @@ export function DataTableToolbar<TData>({
             options={brokerOptions || []}
           />
         )}
+        {table.getColumn("status") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("status")}
+            title="Status"
+            options={PropertyStatusOptions || []}
+          />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
+            className="!min-h-9 px-2 lg:px-3"
           >
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
@@ -114,7 +128,7 @@ export function DataTableToolbar<TData>({
           <Button
             variant="destructive"
             size="sm"
-            className="h-8 lg:flex"
+            className="h-4 lg:flex"
             onClick={() => {
               setOpen(true);
             }}

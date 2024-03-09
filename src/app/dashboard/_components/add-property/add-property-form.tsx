@@ -27,6 +27,8 @@ import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DotLoader from "~/components/dot-loader";
+import { PropertyStatusZodType } from "~/app/_types/properties";
+import { propertySchema } from "../../data/schema";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -42,7 +44,18 @@ const formSchema = z.object({
   brokerEntityId: z.string().optional(),
   pricePerSqFt: z.number(),
   calculatedPrice: z.number().optional(),
+  status: PropertyStatusZodType,
 });
+
+interface AddPropertyFormProps {
+  categories: Category[];
+  locations: Locations[];
+  brokers: BrokerEntity[];
+  properties?: PropertyItem[];
+  setOpen: (arg: boolean) => void;
+  isEditMode?: boolean;
+  editPropertyId?: string;
+}
 
 export function AddPropertyForm({
   categories,
@@ -52,22 +65,17 @@ export function AddPropertyForm({
   setOpen,
   isEditMode = false,
   editPropertyId,
-}: {
-  categories: Category[];
-  properties?: PropertyItem[]; // only need to pass when editing data
-  locations: Locations[];
-  brokers: BrokerEntity[];
-  setOpen: (arg: boolean) => void;
-  isEditMode?: boolean;
-  editPropertyId?: string;
-}) {
+}: AddPropertyFormProps) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: async () => {
       if (isEditMode) {
-        const property = properties?.find((b) => b.id === editPropertyId);
+        const property =
+          properties?.find((b) => b.id === editPropertyId) ??
+          ({} as PropertyItem);
         return {
+          ...property,
           title: property?.title ?? "",
           length: property?.length ?? 0,
           width: property?.width ?? 0,
@@ -79,7 +87,9 @@ export function AddPropertyForm({
           pricePerSqFt: property?.pricePerSqFt ?? 0,
         };
       }
-      return {} as z.infer<typeof formSchema>;
+      return {
+        status: "on_market",
+      } as z.infer<typeof formSchema>;
     },
   });
   // const categoryConfigs = api.categoriesConfig.list.useQuery();
@@ -107,19 +117,22 @@ export function AddPropertyForm({
     onError: () => {
       toast.error("Failed to add property :(");
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       setOpen(false);
       toast.success("Successfull added new property!");
       router.refresh();
     },
   });
 
+  const props = api.properties.list.useQuery();
+  console.log(props.data);
+
   const { isLoading: isUpdating, mutateAsync: mutateAsyncUpdate } =
     api.properties.update.useMutation({
       onError: () => {
         toast.error("Failed to update property :(");
       },
-      onSuccess: (params) => {
+      onSuccess: async (params) => {
         setOpen(false);
         toast.success(`Successfull updated ${params.title} property!`);
         router.refresh();
