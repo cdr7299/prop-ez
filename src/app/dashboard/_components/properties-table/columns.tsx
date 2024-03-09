@@ -80,7 +80,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <span className="block w-32 truncate">
+              <span className="block w-32 truncate text-left">
                 {row.getValue("address")}
               </span>
             </TooltipTrigger>

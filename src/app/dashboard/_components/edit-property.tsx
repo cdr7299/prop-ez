@@ -34,7 +34,7 @@ export function EditProperty({
 }: EditPropertyProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="px-2 py-6 sm:max-w-[80%] sm:px-4 sm:py-6 xl:max-w-[70%] 2xl:max-w-[50%]">
         <DialogHeader>
           <DialogTitle>Edit Property</DialogTitle>
           <DialogDescription>Press submit to save it.</DialogDescription>

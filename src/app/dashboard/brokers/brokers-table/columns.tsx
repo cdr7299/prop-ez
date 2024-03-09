@@ -40,9 +40,7 @@ export const columns: ColumnDef<BrokerSchema>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ row }) => (
-      <div className="min-w-[250px]">{row.getValue("name")}</div>
-    ),
+    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
@@ -51,11 +49,7 @@ export const columns: ColumnDef<BrokerSchema>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Contact No." />
     ),
-    cell: ({ row }) => (
-      <div className="max-w-[150px] truncate">
-        {row.getValue("phoneNumber")}
-      </div>
-    ),
+    cell: ({ row }) => <div className="">{row.getValue("phoneNumber")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
