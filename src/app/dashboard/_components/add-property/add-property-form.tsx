@@ -28,7 +28,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DotLoader from "~/components/dot-loader";
 import { PropertyStatusZodType } from "~/app/_types/properties";
-import { propertySchema } from "../../data/schema";
 
 const formSchema = z.object({
   title: z.string().min(2, {

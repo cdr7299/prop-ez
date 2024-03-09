@@ -28,7 +28,7 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { type BrokerEntity } from "@prisma/client";
-import { EditBroker } from "../../edit-broker";
+import { EditBroker } from "../edit-broker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
