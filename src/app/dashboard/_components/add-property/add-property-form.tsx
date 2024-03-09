@@ -123,9 +123,6 @@ export function AddPropertyForm({
     },
   });
 
-  const props = api.properties.list.useQuery();
-  console.log(props.data);
-
   const { isLoading: isUpdating, mutateAsync: mutateAsyncUpdate } =
     api.properties.update.useMutation({
       onError: () => {

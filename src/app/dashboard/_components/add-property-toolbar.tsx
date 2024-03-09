@@ -30,7 +30,7 @@ export default function AddPropertyToolbar({
         <Button variant="secondary" className="items-center gap-2" asChild>
           <Link href="/dashboard/brokers" className="text-sm">
             <IdCardIcon className="size-5" />
-            Brokers
+            <span className="hidden sm:inline-block">Brokers</span>
           </Link>
         </Button>
         <Button variant="secondary" asChild className="items-center gap-2">
@@ -38,12 +38,14 @@ export default function AddPropertyToolbar({
             href="/dashboard/customers"
             className="flex items-center text-sm"
           >
-            <PersonIcon className="size-4" /> Customers
+            <PersonIcon className="size-4" />{" "}
+            <span className="hidden sm:inline-block">Customers</span>
           </Link>
         </Button>
         <Button variant="secondary" asChild>
           <Link href="/dashboard/settings" className="flex items-center gap-2">
-            <GearIcon className="size-4" /> Settings
+            <GearIcon className="size-4" />{" "}
+            <span className="hidden sm:inline-block">Settings</span>
           </Link>
         </Button>
       </div>

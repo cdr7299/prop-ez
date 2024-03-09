@@ -27,7 +27,6 @@ export function EditItemDialog({
   }[];
   editDataId: string;
 }) {
-  console.log("yo", editDataId, data);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[625px]">

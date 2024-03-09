@@ -48,7 +48,6 @@ export function DataTableToolbar<TData>({
           placeholder="Search Customers by name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => {
-            console.log(event.target.value);
             table.getColumn("name")?.setFilterValue(event.target.value);
           }}
           className="h-8 w-[150px] lg:w-[250px]"
