@@ -26,7 +26,6 @@ export const brokersRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string(), phoneNumber: z.string().optional() }))
     .mutation(async ({ ctx, input }) => {
-      console.log(input);
       const location = await ctx.db.brokerEntity.create({
         data: {
           name: input.name,
