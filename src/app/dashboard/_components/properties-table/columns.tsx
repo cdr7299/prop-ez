@@ -138,7 +138,11 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "pricePerSqFt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price (Sq Ft.)" />
+      <DataTableColumnHeader
+        column={column}
+        title="Price"
+        titleHelper="(sq/ft)"
+      />
     ),
     cell: ({ row }) => (
       <div className="w-full">
@@ -180,7 +184,11 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "area",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Area(Sq Ft.)" />
+      <DataTableColumnHeader
+        column={column}
+        title="Area"
+        titleHelper="(sq/ft)"
+      />
     ),
     cell: ({ row }) => (
       <div className="w-full">{Number(row.getValue("area")).toFixed(2)}</div>
@@ -225,7 +233,18 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Broker Name" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[180px] truncate">{row.getValue("brokerName")}</div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <div className="block max-w-32 truncate text-left">
+              {row.getValue("brokerName")}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span className=""> {row.getValue("brokerName")}</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     ),
     filterFn: (row, id, value: string) => {
       return value.includes(row.getValue(id));

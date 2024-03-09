@@ -1,7 +1,11 @@
 "use client";
 
 import { type PropertyItem } from "@prisma/client";
-import { Cross2Icon, PlusCircledIcon } from "@radix-ui/react-icons";
+import {
+  Cross2Icon,
+  Pencil2Icon,
+  PlusCircledIcon,
+} from "@radix-ui/react-icons";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
@@ -10,6 +14,7 @@ import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AddItemDialog } from "./add-item-dialog";
+import { EditItemDialog } from "./edit-item-dialog";
 
 export default function TabsContentCustom({
   value,
@@ -34,6 +39,8 @@ export default function TabsContentCustom({
   const [selectedItem, setSelectedItem] = useState<(typeof data)[0]>();
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
+  const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
+  const [editDataId, setEditDataId] = useState<string>("");
 
   const showDeleteWarning = async (itemId: string, itemName: string) => {
     const matchedProperties = properties.filter(
@@ -53,16 +60,6 @@ export default function TabsContentCustom({
       },
     });
 
-  const {
-    isLoading: isDeletingCategories,
-    mutateAsync: deleteCategoriesAsync,
-  } = api.categories.delete.useMutation({
-    async onSuccess(params) {
-      const itemName = data.find((item) => item.id === params.id);
-      toast.success(`Deleted ${itemName?.name} category successfully`);
-      router.refresh();
-    },
-  });
   const { isLoading: isAddingLocations, mutateAsync: addLocationsAsync } =
     api.locations.create.useMutation({
       async onError(params) {
@@ -77,8 +74,8 @@ export default function TabsContentCustom({
       },
     });
 
-  const { isLoading: isAddingCategories, mutateAsync: addCategoriesAsync } =
-    api.categories.create.useMutation({
+  const { isLoading: isUpdatingLocation, mutateAsync: updateLocation } =
+    api.locations.update.useMutation({
       async onError(params) {
         toast.error(
           `Unable to add, ${params.data?.code}. Please check if you have duplicates.`,
@@ -86,54 +83,66 @@ export default function TabsContentCustom({
       },
       async onSuccess(params) {
         toast.success(`Added ${params.name} successfully`);
-        setShowAddDialog(false);
+        setShowEditDialog(false);
+        setEditDataId("");
         router.refresh();
       },
     });
 
-  const onDelete = async (accessor: "locationId" | "categoryId") => {
-    if (accessor === "locationId")
-      await deleteLocationsAsync({
-        locationId: selectedItem?.id ?? "",
-      });
-    else
-      await deleteCategoriesAsync({
-        categoryId: selectedItem?.id ?? "",
-      });
+  const onDelete = async () => {
+    await deleteLocationsAsync({
+      locationId: selectedItem?.id ?? "",
+    });
   };
 
-  const onAdd = async (
-    accessor: "locationId" | "categoryId",
-    formValues: { name: string },
-  ) => {
-    if (accessor === "locationId")
-      await addLocationsAsync({
-        name: formValues.name,
-      });
-    else
-      await addCategoriesAsync({
-        name: formValues.name,
-      });
+  const onAdd = async (formValues: { name: string }) => {
+    await addLocationsAsync({
+      name: formValues.name,
+    });
+  };
+  const onUpdate = async (formValues: { name: string }) => {
+    await updateLocation({
+      name: formValues.name,
+      locationId: editDataId,
+    });
   };
 
   return (
     <TabsContent
       value={value}
-      className="w-full sm:min-h-[calc(100vh-4.5rem)] sm:py-6"
+      className="w-full sm:m-0 sm:min-h-[calc(100vh-4.5rem)] sm:py-0"
     >
       <div className="w-full border-b-2 px-4 py-4 text-2xl font-bold">
         {value}
       </div>
       <div className="flex w-full flex-wrap gap-4 p-4">
         {data.map((item) => (
-          <Button
+          <div
             key={item.id}
-            className="flex gap-4 rounded-md bg-blue-200/70 px-6 py-2 font-bold text-primary-foreground"
-            onClick={() => showDeleteWarning(item.id, item.name)}
+            className="flex items-center gap-4 rounded-md bg-blue-200/70 px-4 py-1 text-sm font-semibold text-primary-foreground"
           >
             {item.name}
-            <Cross2Icon className="size-4" />
-          </Button>
+            <div className="flex items-center justify-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setEditDataId(item.id);
+                  setShowEditDialog(true);
+                }}
+              >
+                <Pencil2Icon className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-destructive"
+                onClick={() => showDeleteWarning(item.id, item.name)}
+              >
+                <Cross2Icon className="size-4" />
+              </Button>
+            </div>
+          </div>
         ))}
       </div>
       <Button
@@ -149,16 +158,27 @@ export default function TabsContentCustom({
         setOpen={setShowAlert}
         affectedProperties={affectedProperties}
         selectedItemName={selectedItem?.name ?? ""}
-        isDeleting={isDeletingLocations || isDeletingCategories}
-        onDelete={() => onDelete(accessor)}
+        isDeleting={isDeletingLocations}
+        onDelete={() => onDelete()}
       />
       <AddItemDialog
-        isAdding={isAddingLocations || isAddingCategories}
+        isAdding={isAddingLocations}
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}
         onAdd={async (formValues) => {
-          await onAdd(accessor, formValues);
+          await onAdd(formValues);
+        }}
+      />
+      <EditItemDialog
+        data={data}
+        editDataId={editDataId}
+        isUpdating={isUpdatingLocation}
+        open={showEditDialog}
+        setOpen={setShowEditDialog}
+        title={label}
+        onEdit={async (formValues) => {
+          await onUpdate(formValues);
         }}
       />
     </TabsContent>

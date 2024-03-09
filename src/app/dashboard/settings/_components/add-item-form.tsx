@@ -26,16 +26,32 @@ const formSchema = z.object({
 export function AddItemForm({
   onSubmit,
   isAdding,
+  data,
+  editDataId,
+  isEditMode,
 }: {
   onSubmit: (args: { name: string }) => void;
   isAdding: boolean;
+  data?: {
+    id: string;
+    name: string;
+  }[];
+  editDataId?: string;
+  isEditMode?: boolean;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-    },
+
     mode: "onChange",
+    defaultValues: async () => {
+      if (isEditMode) {
+        const matchedData = data?.find((item) => item.id === editDataId);
+        return {
+          name: matchedData?.name ?? "",
+        };
+      }
+      return {} as z.infer<typeof formSchema>;
+    },
   });
 
   function onSubmitForm(values: z.infer<typeof formSchema>) {

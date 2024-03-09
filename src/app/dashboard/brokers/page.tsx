@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
-import { DataTable } from "./_components/brokers-table/data-table";
-import { columns } from "./_components/brokers-table/columns";
+import { DataTable } from "./brokers-table/data-table";
+import { columns } from "./brokers-table/columns";
 import { AddBroker } from "./add-broker";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";

@@ -49,7 +49,7 @@ const categoryNames = [
   "Agricultural Land",
 ];
 
-const createdById = "cltiklppw000m14b7mlse132z"; // IMPORTANT : add the user before the script runs
+const createdById = "cltjby12d0000cd3nqqjjl0ee"; // IMPORTANT : add the user before the script runs
 
 async function main() {
   const seedLocations: Locations[] = [];
