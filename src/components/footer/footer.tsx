@@ -8,12 +8,19 @@ export default function Footer() {
           <h2 className="w-full text-2xl font-extrabold text-accent">Trakr</h2>
         </div>
         <div className="flex w-full gap-6 md:gap-12">
-          <p className="cursor-pointer text-sm underline-offset-2 hover:underline">
-            <Link href="/terms-of-use">Terms of Use</Link>
-          </p>
-          <p className="cursor-pointer text-sm underline-offset-2 hover:underline">
-            <Link href="/privacy-policy">Privacy Policy</Link>
-          </p>
+          <Link
+            href="/terms-of-use"
+            className="cursor-pointer text-sm underline-offset-2 hover:underline"
+          >
+            Terms of Use
+          </Link>
+
+          <Link
+            href="/privacy-policy"
+            className="cursor-pointer text-sm underline-offset-2 hover:underline"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </div>
