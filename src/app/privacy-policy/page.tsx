@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function privacypolicy() {
+export default function PrivacyPolicy() {
   return (
-    <div className="mt-[4.5rem] flex w-full flex-col items-center justify-center">
+    <div className="mt-[4.5rem] flex w-full flex-col items-center justify-center py-4">
       <div className="w-full max-w-screen-2xl">
         <div className=" py-4">
           <div className=" text-4xl">PRIVACY POLICY</div>
@@ -56,14 +56,14 @@ export default function privacypolicy() {
             following section for information regarding the purposes for which
             we collect information.
           </p>
-          <p className="flex w-10/12 py-3 pl-6 ">
-            <div className="text-2xl ">
-              1.1. Contact and account registration information
-            </div>
-          </p>
-          <p className="flex w-10/12 py-3 ">
-            <div className="text-2xl">Purposes of use</div>
-          </p>
+          <p className="flex w-10/12 py-3 pl-6 "> </p>
+          <div className="text-2xl ">
+            1.1. Contact and account registration information
+          </div>
+
+          <p className="flex w-10/12 py-3 "></p>
+          <div className="text-2xl">Purposes of use</div>
+
           <div className="text-1xl">
             <p>- Provide the Services</p>
             <p>- Communicate with you</p>

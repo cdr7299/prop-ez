@@ -2,7 +2,7 @@ import React from "react";
 
 export default function TermsOfUse() {
   return (
-    <div className="mt-[4.5rem] flex w-full flex-col items-center justify-center">
+    <div className="mt-[4.5rem] flex w-full flex-col items-center justify-center py-5">
       <div className="w-full max-w-screen-2xl">
         <div className=" py-4">
           <div className=" text-4xl">TERMS OF USE</div>
