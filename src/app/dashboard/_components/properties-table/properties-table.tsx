@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -55,7 +55,6 @@ export function PropertiesTable<TData, TValue>({
   brokers,
   properties,
 }: DataTableProps<TData, TValue>) {
-  // console.log(data[0]);
   const [open, setOpen] = useState<boolean>(false);
   const [editPropertyId, setEditPropertyId] = useState<string>("");
 
@@ -101,32 +100,6 @@ export function PropertiesTable<TData, TValue>({
       },
     },
   });
-
-  // useEffect(() => {
-  // create a user preference if there's none
-  // if (!userPreference) {
-  //   console.log("user pref created");
-  //   async function createUserPreference() {
-  //     const currentVisibleColumnNames = table
-  //       .getVisibleFlatColumns()
-  //       .map((item) => item.id);
-  //     // await mutateAsync({
-  //     //   propertyTableColumns: table.getVisibleFlatColumns(),
-  //     // });
-  //   }
-  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  //   createUserPreference();
-  // } else {
-  //   console.log("user pref exists", userPreference.propertyTableColumns);
-  //   const payload = {} as VisibilityState;
-  //   // userPreference?.propertyTableColumns?.forEach((curr: string) => {
-  //   //   payload[curr] = true;
-  //   // });
-  //   // table.toggleAllColumnsVisible(false);
-  //   // setColumnVisibility(payload);
-  //   console.log("CHECK ME", payload);
-  // }
-  // }, [userPreference, mutateAsync]);
 
   // useEffect(() => {
   //   async function updatePropertyTableColumnVisibility() {
