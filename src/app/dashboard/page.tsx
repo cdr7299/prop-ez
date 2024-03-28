@@ -5,6 +5,7 @@ import { api } from "~/trpc/server";
 import { getServerAuthSession } from "~/server/auth";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
 import AddPropertyToolbar from "./_components/add-property-toolbar";
+import { getPriceFromProperty } from "./_utils/property-table.utils";
 
 export const metadata: Metadata = {
   title: "Properties",
@@ -21,7 +22,7 @@ export default async function Dashboard() {
   const propertiesFinal = properties.map((item) => ({
     ...item,
     area: (item.length ?? 0) * (item.width ?? 0),
-    price: (item.pricePerSqFt ?? 0) * (item.length ?? 0) * (item.width ?? 0),
+    price: getPriceFromProperty(item),
     category:
       categories.find((category) => category.id === item.categoryId)?.name ??
       "",

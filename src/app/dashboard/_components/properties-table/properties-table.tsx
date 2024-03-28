@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -30,16 +31,18 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import {
   type PropertyItem,
   type BrokerEntity,
-  type Category,
   type Locations,
 } from "@prisma/client";
 import { EditProperty } from "../edit-property";
+import { Button } from "~/components/ui/button";
+import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { type CategoryWithConfig } from "~/server/types/categories.types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   locations: Locations[];
-  categories: Category[];
+  categories: CategoryWithConfig[];
   brokers: BrokerEntity[];
   properties: PropertyItem[];
 }
@@ -52,23 +55,20 @@ export function PropertiesTable<TData, TValue>({
   brokers,
   properties,
 }: DataTableProps<TData, TValue>) {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [editPropertyId, setEditPropertyId] = React.useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [editPropertyId, setEditPropertyId] = useState<string>("");
 
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      category: false,
-      length: false,
-      width: false,
-      brokerContactNumber: false,
-      floors: false,
-      status: false,
-    });
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    category: false,
+    length: false,
+    width: false,
+    brokerContactNumber: false,
+    floors: false,
+    status: false,
+  });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -100,6 +100,22 @@ export function PropertiesTable<TData, TValue>({
       },
     },
   });
+
+  // useEffect(() => {
+  //   async function updatePropertyTableColumnVisibility() {
+  //     const currentVisibleColumnNames = table
+  //       .getVisibleFlatColumns()
+  //       .map((item) => item.id)
+  //       .filter((item) => item !== "actions" && item !== "select");
+  //     console.log(currentVisibleColumnNames);
+  //     await updatePropertyTableColumnVisibilityById({
+  //       id: userPreference.id,
+  //       propertyTableColumns: currentVisibleColumnNames,
+  //     });
+  //   }
+  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //   updatePropertyTableColumnVisibility();
+  // }, [columnVisibility]);
 
   return (
     <div className="space-y-4">
@@ -152,7 +168,13 @@ export function PropertiesTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <div className="flex flex-col items-center justify-center gap-4 py-4">
+                    No results. Try adding a new property.
+                    <Button className="w-fit gap-2">
+                      <PlusCircledIcon className="size-4" />
+                      Add Property
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             )}

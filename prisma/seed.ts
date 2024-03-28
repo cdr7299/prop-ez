@@ -34,6 +34,7 @@ const locationNames = [
   "Sherpur",
   "Jawahar Nagar",
 ];
+
 const categoryNames = [
   "House",
   "Flat",
@@ -49,7 +50,7 @@ const categoryNames = [
   "Agricultural Land",
 ];
 
-const createdById = "cltjby12d0000cd3nqqjjl0ee"; // IMPORTANT : add the user before the script runs
+const createdById = "cluaufscg0005iyvd7htm6xuu"; // IMPORTANT : add the user before the script runs
 
 async function main() {
   const seedLocations: Locations[] = [];
@@ -62,7 +63,7 @@ async function main() {
     "off_market",
     "deal_in_progress",
     "done",
-  ] as PropertyStatus[];
+  ] as string[];
 
   const amountOfCategories = 12;
   for (let i = 0; i < amountOfCategories; i++) {
@@ -80,17 +81,6 @@ async function main() {
   const addCategories = async () =>
     await prisma.category.createMany({ data: seedCategories });
   await addCategories();
-
-  //add category config
-
-  await prisma.categoryConfig.create({
-    data: {
-      id: faker.string.uuid(),
-      floors: 0,
-      categoryId: seedCategories[0]?.id ?? "",
-      createdById: createdById,
-    },
-  });
 
   // add locations
   const amountOfLocations = 17;
@@ -145,6 +135,9 @@ async function main() {
     const randStatus = Math.floor(Math.random() * seedStatuses.length);
     return {
       id: faker.string.uuid(),
+      city: faker.location.city(),
+      state: faker.location.state(),
+      tehsil: faker.location.county(),
       title: faker.word.words({ count: { min: 2, max: 4 } }),
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
@@ -153,12 +146,15 @@ async function main() {
       width: faker.number.float({ min: 20, max: 30 }),
       floors: faker.number.int({ min: 0, max: 3 }),
       priority: "medium",
-      address: faker.location.streetAddress(),
+      address: faker.location.streetAddress({ useFullAddress: true }),
       locationId: locationIds[randLoc] ?? "",
       categoryId: categoryId[randCat] ?? "",
       brokerEntityId: brokerIds[randBroker] ?? "",
-      status: "on_market",
+      status: (seedStatuses[randStatus] as PropertyStatus) ?? "on_market",
       pricePerSqFt: faker.number.float({ min: 1000, max: 30000 }),
+      priceSoldAt: null,
+      askingPrice: null,
+      manualPricing: false,
     };
   }
   const seedProperties: PropertyItem[] = faker.helpers.multiple(

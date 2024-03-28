@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 
 const SignInOptions = () => {
   const handleAuth = async (provider: "google" | "email") => {
+    console.log(provider);
     await signIn(provider);
   };
   return (
@@ -22,12 +23,11 @@ const SignInOptions = () => {
         Sign in with Google
       </Button>
       <Button
-        disabled
         onClick={() => handleAuth("email")}
         variant="default"
         className="w-64"
       >
-        Sign in with Email (coming soon)
+        Other sign in options
       </Button>
     </div>
   );

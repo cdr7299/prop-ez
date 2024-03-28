@@ -1,7 +1,7 @@
 import { api } from "~/trpc/server";
-import TabsContentCustomLocations from "./_components/tab-content-custom-locations";
+import TabsContentCustomLocations from "./_components/tab-content/locations/tab-content-custom-locations";
 
-import TabsContentCustomCategories from "./_components/tab-content-custom-categories";
+import TabsContentCustomCategories from "./_components/tab-content/categories/tab-content-custom-categories";
 
 export default async function DashboardSettings() {
   const locations = await api.locations.list.query();

@@ -9,12 +9,12 @@ import {
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
-import AlertDialogCustom from "./alert-dialog-custom";
+import AlertDialogCustom from "../../alert-dialog-custom";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AddItemDialog } from "./add-item-dialog";
-import { EditItemDialog } from "./edit-item-dialog";
+import { AddLocationDialog } from "./add-location-dialog";
+import { EditLocationDialog } from "./edit-location-dialog";
 
 export default function TabsContentCustom({
   value,
@@ -111,8 +111,18 @@ export default function TabsContentCustom({
       className="w-full sm:m-0 sm:min-h-[calc(100vh-4.5rem)] sm:py-0"
     >
       <div className="w-full border-b-2 px-4 py-4 text-2xl font-bold">
-        {value}
+        <div className="hidden flex-col gap-2 sm:flex">
+          {value}
+          <span className="inline-flex text-sm font-bold">
+            Here you can manage the saved {label.toLowerCase()}s for your
+            properties.
+          </span>
+          <span className="inline-flex text-sm font-normal">
+            These are used to categorize your properties.
+          </span>
+        </div>
       </div>
+      <div></div>
       <div className="flex w-full flex-wrap gap-4 p-4">
         {data.map((item) => (
           <div
@@ -159,7 +169,7 @@ export default function TabsContentCustom({
         isDeleting={isDeletingLocations}
         onDelete={() => onDelete()}
       />
-      <AddItemDialog
+      <AddLocationDialog
         isAdding={isAddingLocations}
         open={showAddDialog}
         setOpen={setShowAddDialog}
@@ -168,7 +178,7 @@ export default function TabsContentCustom({
           await onAdd(formValues);
         }}
       />
-      <EditItemDialog
+      <EditLocationDialog
         data={data}
         editDataId={editDataId}
         isUpdating={isUpdatingLocation}
