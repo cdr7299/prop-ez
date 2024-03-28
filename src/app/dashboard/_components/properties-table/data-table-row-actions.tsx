@@ -26,6 +26,7 @@ import {
   type PropertyStatus,
   PropertyStatusOptions,
 } from "~/app/_types/properties";
+import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -64,9 +65,11 @@ export function DataTableRowActions<TData>({
 
   return (
     <div className="flex items-center gap-2">
-      <Button variant="ghost" className="!h-6 !py-0 px-2">
-        <OpenInNewWindowIcon />
-      </Button>
+      <Link href={`/dashboard/${propertyId}`}>
+        <Button variant="ghost" className="!h-6 !py-0 px-2">
+          <OpenInNewWindowIcon />
+        </Button>
+      </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -79,6 +82,7 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem
+            className="font-semibold"
             onClick={() => {
               table.options.meta?.editProperty(propertyId);
             }}
@@ -103,6 +107,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            className="font-semibold"
             onClick={async () => {
               await mutateAsync({ propertyId: propertyId });
             }}

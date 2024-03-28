@@ -26,7 +26,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
-        className="translate-y-[2px]"
+        className="!m-0 flex items-center !p-0"
       />
     ),
     cell: ({ row }) => (
@@ -34,7 +34,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
-        className="translate-y-[2px]"
+        className="!m-0 flex items-center !p-0"
       />
     ),
     enableSorting: false,
@@ -130,7 +130,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         {new Intl.NumberFormat("en-IN", {
           style: "currency",
           currency: "INR",
-          maximumSignificantDigits: 3,
+          maximumSignificantDigits: 10,
         }).format(row.getValue("price"))}
       </div>
     ),
@@ -151,7 +151,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         {new Intl.NumberFormat("en-IN", {
           style: "currency",
           currency: "INR",
-          maximumSignificantDigits: 1,
+          maximumSignificantDigits: 6,
         }).format(row.getValue("pricePerSqFt"))}
       </div>
     ),

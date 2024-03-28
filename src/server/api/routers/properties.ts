@@ -37,7 +37,12 @@ export const propertiesRouter = createTRPCRouter({
         brokerEntityId: z.string().optional(),
         pricePerSqFt: z.number(),
         propertyId: z.string().min(1),
+        tehsil: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
         status: PropertyStatusZodType,
+        askingPrice: z.number().optional(),
+        manualPricing: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -55,6 +60,11 @@ export const propertiesRouter = createTRPCRouter({
           address: input.address,
           title: input.title,
           status: input.status,
+          tehsil: input.tehsil,
+          city: input.city,
+          state: input.state,
+          askingPrice: input.askingPrice,
+          manualPricing: input.manualPricing,
         },
       });
     }),
@@ -87,6 +97,11 @@ export const propertiesRouter = createTRPCRouter({
         locationId: z.string(),
         brokerEntityId: z.string().optional(),
         pricePerSqFt: z.number(),
+        // customerPrice: z.number().optional(),
+        // soldAt: z.number().optional(),
+        tehsil: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -102,6 +117,9 @@ export const propertiesRouter = createTRPCRouter({
           address: input.address,
           title: input.title,
           createdById: ctx.session.user.id,
+          tehsil: input.tehsil,
+          city: input.city,
+          state: input.state,
         },
       });
     }),

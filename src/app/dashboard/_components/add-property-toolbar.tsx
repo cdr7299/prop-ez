@@ -4,18 +4,15 @@ import { AddProperty } from "./add-property/add-property";
 import { Button } from "~/components/ui/button";
 
 import { IdCardIcon } from "@radix-ui/react-icons";
-import {
-  type Locations,
-  type BrokerEntity,
-  type Category,
-} from "@prisma/client";
+import { type Locations, type BrokerEntity } from "@prisma/client";
+import { type CategoryWithConfig } from "~/server/types/categories.types";
 
 export default function AddPropertyToolbar({
   categories,
   locations,
   brokers,
 }: {
-  categories: Category[];
+  categories: CategoryWithConfig[];
   locations: Locations[];
   brokers: BrokerEntity[];
 }) {

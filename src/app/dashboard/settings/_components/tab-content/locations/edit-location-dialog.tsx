@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { AddItemForm } from "./add-item-form";
+import { AddLocationForm } from "./add-location-form";
 
-export function EditItemDialog({
+export function EditLocationDialog({
   open,
   setOpen,
   title,
@@ -36,7 +36,7 @@ export function EditItemDialog({
             Edit {title} here, press submit to save it.
           </DialogDescription>
         </DialogHeader>
-        <AddItemForm
+        <AddLocationForm
           data={data}
           editDataId={editDataId}
           onSubmit={onEdit}

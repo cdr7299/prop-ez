@@ -23,7 +23,7 @@ const formSchema = z.object({
   defaultFloors: z.string().optional(),
 });
 
-export function AddItemForm({
+export function AddLocationForm({
   onSubmit,
   isAdding,
   data,
@@ -57,11 +57,12 @@ export function AddItemForm({
   function onSubmitForm(values: z.infer<typeof formSchema>) {
     onSubmit(values);
   }
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmitForm)}
-        className="flex flex-col space-y-4"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}

@@ -9,12 +9,15 @@ import {
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { TabsContent } from "~/components/ui/tabs";
-import AlertDialogCustom from "./alert-dialog-custom";
+import AlertDialogCustom from "../../alert-dialog-custom";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { AddItemDialog } from "./add-item-dialog";
-import { EditItemDialog } from "./edit-item-dialog";
+import { AddCategoryDialog } from "./add-category-dialog";
+import { EditCategoryDialog } from "./edit-category-dialog";
+import { type CategoryWithConfig } from "~/server/types/categories.types";
+import { type CategoryFormSchema } from "./categories.types";
+import { type Category } from "@prisma/client";
 
 export default function TabsContentCustomCategories({
   value,
@@ -24,10 +27,7 @@ export default function TabsContentCustomCategories({
   label,
 }: {
   value: string;
-  data: {
-    id: string;
-    name: string;
-  }[];
+  data: CategoryWithConfig[];
   properties: PropertyItem[];
   label: string;
   accessor: "locationId" | "categoryId";
@@ -36,20 +36,20 @@ export default function TabsContentCustomCategories({
   const [affectedProperties, setAffectedProperties] = useState<PropertyItem[]>(
     [],
   );
-  const [selectedItem, setSelectedItem] = useState<(typeof data)[0]>();
+  const [selectedItem, setSelectedItem] = useState<Category>();
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
   const [showEditDialog, setShowEditDialog] = useState<boolean>(false);
 
   const [editDataId, setEditDataId] = useState<string>("");
 
-  const showDeleteWarning = async (itemId: string, itemName: string) => {
+  const showDeleteWarning = async (item: Category) => {
     const matchedProperties = properties.filter(
-      (property) => property[accessor] === itemId,
+      (property) => property[accessor] === item.id,
     );
     setShowAlert(true);
     setAffectedProperties(matchedProperties);
-    setSelectedItem({ id: itemId, name: itemName });
+    setSelectedItem({ ...item });
   };
 
   const {
@@ -96,17 +96,20 @@ export default function TabsContentCustomCategories({
     });
   };
 
-  const onAdd = async (formValues: { name: string }) => {
+  const onAdd = async (formValues: CategoryFormSchema) => {
     await addCategoriesAsync({
       name: formValues.name,
+      fillDefaultFields: formValues.fillDefaultFields,
+      fillPrice: formValues.fillPrice,
+      defaultLength: formValues.defaultLength,
+      defaultWidth: formValues.defaultWidth,
+      defaultPricePerSqFt: formValues.defaultPricePerSqFt,
+      defaultFloors: formValues.defaultFloors,
     });
   };
 
-  const onEdit = async (formValues: { name: string }) => {
-    await updateCategory({
-      name: formValues.name,
-      categoryId: editDataId,
-    });
+  const onEdit = async (formValues: CategoryFormSchema) => {
+    await updateCategory({ ...formValues, categoryId: editDataId });
   };
 
   return (
@@ -115,7 +118,16 @@ export default function TabsContentCustomCategories({
       className="m-0 w-full sm:min-h-[calc(100vh-4.5rem)] sm:py-0"
     >
       <div className="w-full border-b-2 px-4 py-4 text-2xl font-bold">
-        {value}
+        <div className="hidden flex-col gap-2 sm:flex">
+          {value}
+          <span className="inline-flex text-sm font-bold ">
+            Here you can manage the saved categories for your properties.
+          </span>
+          <span className="inline-flex text-sm font-normal">
+            You can configure the default values for each category, auto fill
+            price etc.
+          </span>
+        </div>
       </div>
       <div className="flex w-full flex-wrap gap-4 p-4">
         {data.map((item) => (
@@ -139,7 +151,7 @@ export default function TabsContentCustomCategories({
                 variant="ghost"
                 size="sm"
                 className="hover:bg-destructive"
-                onClick={() => showDeleteWarning(item.id, item.name)}
+                onClick={() => showDeleteWarning(item)}
               >
                 <Cross2Icon className="size-4" />
               </Button>
@@ -163,23 +175,23 @@ export default function TabsContentCustomCategories({
         isDeleting={isDeletingCategories}
         onDelete={() => onDelete()}
       />
-      <AddItemDialog
+      <AddCategoryDialog
         isAdding={isAddingCategories}
         open={showAddDialog}
         setOpen={setShowAddDialog}
         title={label}
-        onAdd={async (formValues) => {
+        onAdd={async (formValues: CategoryFormSchema) => {
           await onAdd(formValues);
         }}
       />
-      <EditItemDialog
+      <EditCategoryDialog
         data={data}
         editDataId={editDataId}
         isUpdating={isUpdatingCategories}
         open={showEditDialog}
         setOpen={setShowEditDialog}
         title={label}
-        onEdit={async (formValues) => {
+        onEdit={async (formValues: CategoryFormSchema) => {
           await onEdit(formValues);
         }}
       />

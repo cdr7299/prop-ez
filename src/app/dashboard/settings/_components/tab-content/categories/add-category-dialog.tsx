@@ -5,9 +5,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { AddItemForm } from "./add-item-form";
+import { AddCategoryForm } from "./add-category-form";
+import { type CategoryFormSchema } from "./categories.types";
 
-export function AddItemDialog({
+export function AddCategoryDialog({
   open,
   setOpen,
   title,
@@ -17,7 +18,7 @@ export function AddItemDialog({
   open: boolean;
   setOpen: (args: boolean) => void;
   title: string;
-  onAdd: (args: { name: string }) => void;
+  onAdd: (args: CategoryFormSchema) => void;
   isAdding: boolean;
 }) {
   return (
@@ -29,7 +30,7 @@ export function AddItemDialog({
             Add new {title} here, press submit to save it.
           </DialogDescription>
         </DialogHeader>
-        <AddItemForm onSubmit={onAdd} isAdding={isAdding} />
+        <AddCategoryForm onSubmit={onAdd} isAdding={isAdding} />
       </DialogContent>
     </Dialog>
   );
