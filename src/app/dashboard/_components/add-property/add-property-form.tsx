@@ -59,7 +59,6 @@ export function AddPropertyForm({
         isEditMode,
         properties,
         editPropertyId,
-        categories,
       ),
   });
   const watchLength = form.watch("length");
@@ -85,8 +84,12 @@ export function AddPropertyForm({
 
   useEffect(() => {
     if (watchManualPricing) {
-      form.setValue("askingPrice", form.getValues("askingPrice"));
-    } else {
+      form.setValue("askingPrice", form.getValues("askingPrice") ?? 0);
+    } else if (
+      form.getValues("length") &&
+      form.getValues("width") &&
+      form.getValues("pricePerSqFt")
+    ) {
       form.setValue(
         "calculatedPrice",
         form.getValues("length") *
