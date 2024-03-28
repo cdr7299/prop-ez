@@ -154,6 +154,7 @@ async function main() {
       pricePerSqFt: faker.number.float({ min: 1000, max: 30000 }),
       priceSoldAt: null,
       askingPrice: null,
+      manualPricing: false,
     };
   }
   const seedProperties: PropertyItem[] = faker.helpers.multiple(
