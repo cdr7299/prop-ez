@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Trakr",
+  title: "PropEZ",
   description: "Track real estate easy",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
