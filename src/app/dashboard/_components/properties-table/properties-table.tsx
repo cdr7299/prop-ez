@@ -34,8 +34,6 @@ import {
   type Locations,
 } from "@prisma/client";
 import { EditProperty } from "../edit-property";
-import { Button } from "~/components/ui/button";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { type CategoryWithConfig } from "~/server/types/categories.types";
 
 interface DataTableProps<TData, TValue> {
@@ -132,7 +130,11 @@ export function PropertiesTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="px-3"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -153,7 +155,7 @@ export function PropertiesTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="px-3">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

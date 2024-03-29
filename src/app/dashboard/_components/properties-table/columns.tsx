@@ -19,23 +19,27 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="!m-0 flex items-center !p-0"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="!m-0 flex items-center !p-0"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -46,7 +50,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Date Added" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-16">
+      <div className="flex max-w-56 items-center gap-4">
+        <Badge variant="default" className="p- min-h-6 break-words">
+          <span className="!text-xs">{row.original.category}</span>
+        </Badge>
         {getLocalDateTime(row.getValue("createdAt"))}
       </div>
     ),
@@ -75,22 +82,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Address" />
     ),
     cell: ({ row }) => (
-      <div className="flex max-w-72 items-center gap-2">
-        <Badge variant="default" className="p- min-h-6 break-words">
-          <span className="!text-xs">{row.original.category}</span>
-        </Badge>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <span className="line-clamp-3 max-w-60 text-left">
-                {row.getValue("address")}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent className="max-w-64">
-              <span className="">{row.getValue("address")}</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex max-w-44 items-center gap-2">
+        <span className="line-clamp-3 max-w-44 text-left">
+          {row.getValue("address")}
+        </span>
       </div>
     ),
     enableSorting: true,
@@ -103,19 +98,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className="block w-32 truncate text-left">
-                  {row.getValue("title")}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <span className=""> {row.getValue("title")}</span>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <div className="flex">
+          <span className="line-clamp-2 block max-w-56 text-left">
+            {row.getValue("title")}
+          </span>
         </div>
       );
     },
