@@ -81,7 +81,7 @@ export function DataTableToolbar<TData>({
             onChange={(event) =>
               table.getColumn("address")?.setFilterValue(event.target.value)
             }
-            className="h-8 w-[150px] pl-8 lg:w-[250px]"
+            className="h-8 w-[150px] pl-8 placeholder:font-semibold lg:w-[250px]"
           />
         </div>
         {table.getColumn("location") && (
