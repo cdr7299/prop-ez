@@ -42,9 +42,9 @@ export default function TermsOfUse() {
           </div>
           <p className="flex w-10/12 py-3  pl-2">
             All content on our website, including text, graphics, logos, and
-            images, is the property of shreeprop-trakr or its licensors and is
-            protected by copyright and other intellectual property laws. You may
-            not reproduce, modify, or distribute any content from our website
+            images, is the property of PropEZ or its licensors and is protected
+            by copyright and other intellectual property laws. You may not
+            reproduce, modify, or distribute any content from our website
             without our prior written consent.
           </p>
 

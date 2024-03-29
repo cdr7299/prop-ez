@@ -166,14 +166,11 @@ export function PropertiesTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-60 text-center"
                 >
-                  <div className="flex flex-col items-center justify-center gap-4 py-4">
-                    No results. Try adding a new property.
-                    <Button className="w-fit gap-2">
-                      <PlusCircledIcon className="size-4" />
-                      Add Property
-                    </Button>
+                  <div className="py-4">
+                    No results. Try adding a new{" "}
+                    <span className="font-bold text-accent">property.</span>
                   </div>
                 </TableCell>
               </TableRow>
