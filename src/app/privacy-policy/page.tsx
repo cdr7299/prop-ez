@@ -33,59 +33,53 @@ export default function PrivacyPolicy() {
           <h2 className=" py-2 text-xl">
             1.1. Contact and account registration information
           </h2>
-          <h3 className=" py-2 text-base">Purposes of use: </h3>
-          <p>- Provide the Services</p>
-          <p>- Communicate with you</p>
-          <p>- Personalize your experience</p>
-          <p>-Secure our Services and users</p>
-          <p>- Fraud prevention and legal purposes</p>
-          <h3 className="py-2 text-base">Sources of personal information:</h3>
-          <p>- You</p>
-          <p>
-            - Other users who provide information about you in connection with
+          <ul className=" py-2 text-base">Purposes of use: </ul>
+          <li>Provide the Services</li>
+          <li> Communicate with you</li>
+          <li> Personalize your experience</li>
+          <li>Secure our Services and users</li>
+          <li> Fraud prevention and legal purposes</li>
+          <ul className="py-2 text-base">Sources of personal information:</ul>
+          <li> You</li>
+          <li>
+            Other users who provide information about you in connection with
             their event or profile
-          </p>
-          <p>- Consumer data resellers</p>
-          <p>- Public records databases</p>
-          <p>- Conferences and other events</p>
-          <p>- Our Affiliates</p>
+          </li>
+          <li> Consumer data resellers</li>
+          <li> Public records databases</li>
+          <li> Conferences and other events</li>
+          <li> Our Affiliates</li>
           <h2 className=" py-2 text-xl">
             1.2. Demographic and Statistical Information
           </h2>
-          <h3 className=" py-2 text-base "> Purposes of use:</h3>
-          <p>- Provide the Services</p>
-          <p>- Communicate with you</p>
-          <p>- Personalize your experience</p>
+          <ul className=" py-2 text-base "> Purposes of use:</ul>
+          <li> Provide the Services</li>
+          <li> Communicate with you</li>
+          <li> Personalize your experience</li>
           <h3 className="py-2 text-base">Sources of personal information:</h3>
-          <p>- You</p>
+          <li> You</li>
 
-          <p>
-            - Other users who provide information about you in connection with
-            their event or profile
-          </p>
-          <p>- Consumer data resellers</p>
-
-          <p>
-            - Social media networks, in accordance with your privacy preferences
-          </p>
+          <li>
+            Social media networks, in accordance with your privacy preferences
+          </li>
 
           <h2 className=" py-2 text-xl">
             1.3. Financial and transactional information
           </h2>
-          <h3 className=" py-2 text-base "> Purposes of use:</h3>
-          <p>- Provide the Services</p>
-          <p>- Communicate with you</p>
-          <p>- Secure our Services and users</p>
-          <p>- Fraud prevention and legal purposes</p>
-          <h3 className=" py-2 text-base ">Source of Personal Information :</h3>
+          <ul className=" py-2 text-base "> Purposes of use:</ul>
+          <li> Provide the Services</li>
+          <li> Communicate with you</li>
+          <li> Secure our Services and users</li>
+          <li> Fraud prevention and legal purposes</li>
+          <ul className=" py-2 text-base ">Source of Personal Information :</ul>
 
-          <p>- You</p>
+          <li> You</li>
 
-          <p>
-            - Third-party payment processors who collect this information on our
+          <li>
+            Third-party payment processors who collect this information on our
             behalf and who also have an independent relationship with you
-          </p>
-          <p>- Third party suppliers and sellers</p>
+          </li>
+          <li> Third party suppliers and sellers</li>
         </div>
 
         <div className="second py-2">
