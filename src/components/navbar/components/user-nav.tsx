@@ -20,7 +20,7 @@ import {
 export function UserNav({ session }: { session: Session }) {
   const router = useRouter();
   const handleSignOut = async () => {
-    await signOut();
+    await signOut({ callbackUrl: "/" });
     router.push("/");
   };
   const initials = useMemo<string>(() => {
@@ -58,15 +58,15 @@ export function UserNav({ session }: { session: Session }) {
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             Billing
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          </DropdownMenuItem> */}
+          {/* <DropdownMenuItem>New Team</DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>

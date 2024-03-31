@@ -7,7 +7,6 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type BrokerSchema } from "../data/schema";
-import { getLocalDateTime } from "~/lib/date.utils";
 
 export const columns: ColumnDef<BrokerSchema>[] = [
   {
@@ -38,24 +37,18 @@ export const columns: ColumnDef<BrokerSchema>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Broker Name" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
-    cell: ({ row }) => (
-      <div className="min-w-[250px]">{row.getValue("name")}</div>
-    ),
+    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "phoneNumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Broker Contact No." />
+      <DataTableColumnHeader column={column} title="Contact No." />
     ),
-    cell: ({ row }) => (
-      <div className="max-w-[150px] truncate">
-        {row.getValue("phoneNumber")}
-      </div>
-    ),
+    cell: ({ row }) => <div className="">{row.getValue("phoneNumber")}</div>,
     enableSorting: true,
     enableHiding: true,
   },

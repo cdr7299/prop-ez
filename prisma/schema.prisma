@@ -12,6 +12,14 @@ enum Priority {
   high
 }
 
+enum PropertyStatus {
+  on_market
+  off_market
+  deal_in_progress
+  done
+  archived
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -64,88 +72,124 @@ model VerificationToken {
 // App models
 
 model User {
-  id             String          @id @default(cuid())
-  name           String?
-  email          String?         @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  properties     PropertyItem[]
-  role           Role            @default(BASIC)
-  UserPreference UserPreference?
-  Locations      Locations[]
-  Category       Category[]
-  BrokerEntity   BrokerEntity[]
-  CategoryConfig CategoryConfig?
+  id                 String               @id @default(cuid())
+  name               String?
+  email              String?              @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  properties         PropertyItem[]
+  role               Role                 @default(BASIC)
+  UserPreference     UserPreference?
+  Locations          Locations[]
+  Category           Category[]
+  BrokerEntity       BrokerEntity[]
+  CategoryConfig     CategoryConfig[]
+  CustomerPreference CustomerPreference[]
+  Customer           Customer[]
 
   @@index([email])
 }
 
 model UserPreference {
   id           String   @id @default(cuid())
-  emailUpdates Boolean?
+  emailUpdates Boolean? @default(false)
   user         User     @relation(fields: [userId], references: [id])
   userId       String   @unique
 }
 
 model PropertyItem {
-  id             String        @id @default(cuid())
+  id             String         @id @default(cuid())
   title          String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  address        String        @unique
-  createdBy      User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  address        String
+  tehsil         String?
+  city           String?
+  state          String?
+  createdBy      User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
   createdById    String
   length         Float?
   width          Float?
   floors         Int
-  Category       Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  Category       Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId     String
   priority       Priority?
-  status         Status?       @relation(fields: [statusId], references: [id])
-  statusId       String?
-  location       Locations     @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  status         PropertyStatus @default(on_market)
+  location       Locations      @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId     String
-  broker         BrokerEntity? @relation(fields: [brokerEntityId], references: [id])
+  broker         BrokerEntity?  @relation(fields: [brokerEntityId], references: [id])
   brokerEntityId String?
   pricePerSqFt   Float?
+  askingPrice    Float?
+  priceSoldAt    Float?
+  customers      Customer[]
+  manualPricing  Boolean        @default(false)
+}
+
+model Customer {
+  id                   String              @id @default(cuid())
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @default(now()) @updatedAt
+  createdBy            User                @relation(fields: [createdById], references: [id])
+  name                 String
+  phoneNumber          String?
+  email                String?
+  PropertyItem         PropertyItem[]
+  customerPreferenceId String?
+  CustomerPreference   CustomerPreference?
+  createdById          String
+}
+
+model CustomerPreference {
+  id          String   @id @default(cuid())
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  Customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String   @unique
 }
 
 model Locations {
   id          String         @id @default(cuid())
-  name        String         @unique
+  name        String
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @default(now()) @updatedAt
   properties  PropertyItem[]
   createdBy   User           @relation(fields: [createdById], references: [id])
   createdById String
+
+  @@unique([name, createdById])
 }
 
 model Category {
   id             String          @id @default(cuid())
-  name           String          @unique
+  name           String
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @default(now()) @updatedAt
   properties     PropertyItem[]
   createdBy      User            @relation(fields: [createdById], references: [id])
   createdById    String
   CategoryConfig CategoryConfig?
+
+  @@unique([name, createdById])
+  @@index([name, createdById])
 }
 
 model CategoryConfig {
-  id          String   @id @default(cuid())
-  floors      Int
-  Category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  String   @unique
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String   @unique
-}
-
-model Status {
-  id         String         @id @default(cuid())
-  name       String         @unique
-  properties PropertyItem[]
+  id                  String   @id @default(cuid())
+  defaultWidth        Float
+  defaultLength       Float
+  Category            Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId          String   @unique
+  createdBy           User     @relation(fields: [createdById], references: [id])
+  createdById         String
+  fillPrice           Boolean  @default(true)
+  fillDefaultFields   Boolean  @default(true)
+  defaultFloors       Int
+  defaultPricePerSqFt Float
 }
 
 model BrokerEntity {

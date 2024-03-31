@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
@@ -9,28 +8,38 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { type PropertyItem } from "../../data/schema";
 import { getLocalDateTime } from "~/lib/date.utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 export const columns: ColumnDef<PropertyItem>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -41,7 +50,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Date Added" />
     ),
     cell: ({ row }) => (
-      <div className="w-full">
+      <div className="flex max-w-56 items-center gap-4">
+        <Badge variant="default" className="p- min-h-6 break-words">
+          <span className="!text-xs">{row.original.category}</span>
+        </Badge>
         {getLocalDateTime(row.getValue("createdAt"))}
       </div>
     ),
@@ -54,12 +66,14 @@ export const columns: ColumnDef<PropertyItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Location" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("location")}</div>,
+    cell: ({ row }) => (
+      <div className="max-w-32">{row.getValue("location")}</div>
+    ),
     filterFn: (row, id, value: string) => {
       // should infer value : string
       return value.includes(row.getValue(id));
     },
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -68,15 +82,29 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Address" />
     ),
     cell: ({ row }) => (
-      <div className="flex w-full min-w-64 items-center gap-1">
-        <Badge variant="default" className="h-6">
-          {row.original.category}
-        </Badge>
-        {row.getValue("address")}
+      <div className="flex max-w-44 items-center gap-2">
+        <span className="line-clamp-3 max-w-44 text-left">
+          {row.getValue("address")}
+        </span>
       </div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
+  },
+  {
+    accessorKey: "title",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Title" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex">
+          <span className="line-clamp-2 block max-w-56 text-left">
+            {row.getValue("title")}
+          </span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "price",
@@ -88,7 +116,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
         {new Intl.NumberFormat("en-IN", {
           style: "currency",
           currency: "INR",
-          maximumSignificantDigits: 3,
+          maximumSignificantDigits: 10,
         }).format(row.getValue("price"))}
       </div>
     ),
@@ -98,14 +126,18 @@ export const columns: ColumnDef<PropertyItem>[] = [
   {
     accessorKey: "pricePerSqFt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price (Sq Ft.)" />
+      <DataTableColumnHeader
+        column={column}
+        title="Price"
+        titleHelper="(sq/ft)"
+      />
     ),
     cell: ({ row }) => (
       <div className="w-full">
         {new Intl.NumberFormat("en-IN", {
           style: "currency",
           currency: "INR",
-          maximumSignificantDigits: 1,
+          maximumSignificantDigits: 6,
         }).format(row.getValue("pricePerSqFt"))}
       </div>
     ),
@@ -126,9 +158,25 @@ export const columns: ColumnDef<PropertyItem>[] = [
     enableHiding: true,
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => <div className="w-full">{row.getValue("status")}</div>,
+    filterFn: (row, id, value: string) => {
+      return value.includes(row.getValue(id));
+    },
+    enableSorting: false,
+    enableHiding: true,
+  },
+  {
     accessorKey: "area",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Area(Sq Ft.)" />
+      <DataTableColumnHeader
+        column={column}
+        title="Area"
+        titleHelper="(sq/ft)"
+      />
     ),
     cell: ({ row }) => (
       <div className="w-full">{Number(row.getValue("area")).toFixed(2)}</div>
@@ -173,7 +221,18 @@ export const columns: ColumnDef<PropertyItem>[] = [
       <DataTableColumnHeader column={column} title="Broker Name" />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[150px] truncate">{row.getValue("brokerName")}</div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <div className="block max-w-32 truncate text-left">
+              {row.getValue("brokerName")}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span className=""> {row.getValue("brokerName")}</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     ),
     filterFn: (row, id, value: string) => {
       return value.includes(row.getValue(id));
@@ -197,49 +256,7 @@ export const columns: ColumnDef<PropertyItem>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex space-x-2">
-          <span className="max-w-[150px] truncate font-medium">
-            {row.getValue("title")}
-          </span>
-        </div>
-      );
-    },
-  },
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Status" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const status = statuses.find(
-  //       (status) => status.value === row.getValue("status"),
-  //     );
 
-  //     if (!status) {
-  //       return null;
-  //     }
-
-  //     return (
-  //       <div className="flex w-[100px] items-center">
-  //         {status.icon && (
-  //           <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-  //         )}
-  //         <span>{status.label}</span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
   // {
   //   accessorKey: "priority",
   //   header: ({ column }) => (

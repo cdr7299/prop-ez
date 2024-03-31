@@ -23,29 +23,46 @@ const formSchema = z.object({
   defaultFloors: z.string().optional(),
 });
 
-export function AddItemForm({
+export function AddLocationForm({
   onSubmit,
   isAdding,
+  data,
+  editDataId,
+  isEditMode,
 }: {
   onSubmit: (args: { name: string }) => void;
   isAdding: boolean;
+  data?: {
+    id: string;
+    name: string;
+  }[];
+  editDataId?: string;
+  isEditMode?: boolean;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-    },
+
     mode: "onChange",
+    defaultValues: async () => {
+      if (isEditMode) {
+        const matchedData = data?.find((item) => item.id === editDataId);
+        return {
+          name: matchedData?.name ?? "",
+        };
+      }
+      return {} as z.infer<typeof formSchema>;
+    },
   });
 
   function onSubmitForm(values: z.infer<typeof formSchema>) {
     onSubmit(values);
   }
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmitForm)}
-        className="flex flex-col space-y-4"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}

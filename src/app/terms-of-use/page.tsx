@@ -35,7 +35,6 @@ export default function TermsOfUse() {
           media.
         </p>
       </div>
-
       <div className="third py-2">
         <h1 className="text-2xl">3. Limitation of Liability</h1>
         <p className="py-2">
@@ -59,7 +58,6 @@ export default function TermsOfUse() {
           interactions with users.
         </p>
       </div>
-
       <div className=" fifth py-2">
         <h1 className="text-2xl">5. Changes to these Terms</h1>
         <p className="py-2">

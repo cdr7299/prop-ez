@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -19,30 +19,27 @@ import { Input } from "~/components/ui/input";
 import { AddPropertyCombobox } from "./_components/add-property-form-combobox";
 import {
   type Locations,
-  type Category,
   type BrokerEntity,
   type PropertyItem,
+  type CategoryConfig,
 } from "@prisma/client";
-import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import DotLoader from "~/components/dot-loader";
+import { type CategoryWithConfig } from "~/server/types/categories.types";
+import { Checkbox } from "~/components/ui/checkbox";
+import { AddPropertyFormSchema } from "./add-property-form.types";
+import { getDefaultValuesForAddPropertyForm } from "./_utils/add-property-utils";
 
-const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "Title must be at least 2 characters.",
-  }),
-  length: z.number(),
-  width: z.number(),
-  area: z.number().optional(),
-  floors: z.number().int({ message: "Floors can be integers only" }),
-  address: z.string().min(5),
-  categoryId: z.string(),
-  locationId: z.string(),
-  brokerEntityId: z.string().optional(),
-  pricePerSqFt: z.number(),
-  calculatedPrice: z.number().optional(),
-});
+interface AddPropertyFormProps {
+  categories: Array<CategoryWithConfig>;
+  locations: Locations[];
+  brokers: BrokerEntity[];
+  properties?: PropertyItem[];
+  setOpen: (arg: boolean) => void;
+  isEditMode?: boolean;
+  editPropertyId?: string;
+  onSubmit: (values: z.infer<typeof AddPropertyFormSchema>) => void;
+  isLoading: boolean;
+}
 
 export function AddPropertyForm({
   categories,
@@ -52,41 +49,23 @@ export function AddPropertyForm({
   setOpen,
   isEditMode = false,
   editPropertyId,
-}: {
-  categories: Category[];
-  properties?: PropertyItem[]; // only need to pass when editing data
-  locations: Locations[];
-  brokers: BrokerEntity[];
-  setOpen: (arg: boolean) => void;
-  isEditMode?: boolean;
-  editPropertyId?: string;
-}) {
-  const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: async () => {
-      if (isEditMode) {
-        const property = properties?.find((b) => b.id === editPropertyId);
-        return {
-          title: property?.title ?? "",
-          length: property?.length ?? 0,
-          width: property?.width ?? 0,
-          floors: property?.floors ?? 0,
-          address: property?.address ?? "",
-          categoryId: property?.categoryId ?? "",
-          locationId: property?.locationId ?? "",
-          brokerEntityId: property?.brokerEntityId ?? "",
-          pricePerSqFt: property?.pricePerSqFt ?? 0,
-        };
-      }
-      return {} as z.infer<typeof formSchema>;
-    },
+  onSubmit,
+  isLoading,
+}: AddPropertyFormProps) {
+  const form = useForm<z.infer<typeof AddPropertyFormSchema>>({
+    resolver: zodResolver(AddPropertyFormSchema),
+    defaultValues: () =>
+      getDefaultValuesForAddPropertyForm(
+        isEditMode,
+        properties,
+        editPropertyId,
+      ),
   });
-  // const categoryConfigs = api.categoriesConfig.list.useQuery();
-
   const watchLength = form.watch("length");
   const watchWidth = form.watch("width");
   const watchPricePerSqFt = form.watch("pricePerSqFt");
+  const watchCategoryId = form.watch("categoryId");
+  const watchManualPricing = form.watch("manualPricing");
 
   useEffect(() => {
     if (watchLength && watchWidth) {
@@ -103,54 +82,91 @@ export function AddPropertyForm({
     }
   }, [watchLength, watchWidth, form, watchPricePerSqFt]);
 
-  const { isLoading, mutateAsync } = api.properties.create.useMutation({
-    onError: () => {
-      toast.error("Failed to add property :(");
-    },
-    onSuccess: () => {
-      setOpen(false);
-      toast.success("Successfull added new property!");
-      router.refresh();
-    },
-  });
-
-  const { isLoading: isUpdating, mutateAsync: mutateAsyncUpdate } =
-    api.properties.update.useMutation({
-      onError: () => {
-        toast.error("Failed to update property :(");
-      },
-      onSuccess: (params) => {
-        setOpen(false);
-        toast.success(`Successfull updated ${params.title} property!`);
-        router.refresh();
-      },
-    });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isEditMode) {
-      await mutateAsyncUpdate({ ...values, propertyId: editPropertyId ?? "" });
-    } else await mutateAsync(values);
-  }
+  useEffect(() => {
+    if (watchManualPricing) {
+      form.setValue("askingPrice", form.getValues("askingPrice") ?? 0);
+    } else if (
+      form.getValues("length") &&
+      form.getValues("width") &&
+      form.getValues("pricePerSqFt")
+    ) {
+      form.setValue(
+        "calculatedPrice",
+        form.getValues("length") *
+          form.getValues("width") *
+          form.getValues("pricePerSqFt"),
+      );
+    }
+  }, [watchManualPricing, form]);
 
   const setCategoryValue = useCallback(
     (val: string) => {
       form.setValue("categoryId", val);
-      // const config = categoryConfigs.data?.find(
-      //   (item) => item.categoryId === val,
-      // );
-      // if (config) {
-      //   form.setValue("floors", config.floors);
-      // }
+      const categoryData = categories.find((item) => item.id === val);
+      const categoryConfig =
+        categoryData?.CategoryConfig ?? ({} as CategoryConfig);
+
+      if (categoryConfig && categoryConfig.fillDefaultFields) {
+        form.setValue("floors", categoryConfig?.defaultFloors);
+        form.setValue("width", categoryConfig?.defaultWidth);
+        form.setValue("length", categoryConfig?.defaultLength);
+        form.setValue("pricePerSqFt", categoryConfig?.defaultPricePerSqFt);
+      }
+      form.setValue("manualPricing", !categoryConfig?.fillPrice);
     },
-    [form],
+    [form, categories],
   );
 
+  const getPriceSection = () => {
+    if (!watchCategoryId) {
+      return <></>;
+    } else {
+      return !watchManualPricing ? (
+        <FormField
+          control={form.control}
+          name="calculatedPrice"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Property Price</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Length x Width x Price(sq.ft)"
+                  disabled
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      ) : (
+        <FormField
+          control={form.control}
+          name="askingPrice"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel>Asking Price</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="number"
+                  onChange={(event) => field.onChange(+event.target.value)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
+  };
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4"
+        className="flex flex-col space-y-4 overflow-y-scroll px-4"
       >
-        <div className="flex justify-between gap-6 md:flex-nowrap">
+        <div className="flex justify-between gap-2 sm:gap-6 md:flex-nowrap">
           <FormField
             control={form.control}
             name="title"
@@ -159,7 +175,7 @@ export function AddPropertyForm({
                 <FormLabel>Property Title *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="e.g. Good location, good rate, bank held etc"
+                    placeholder="eg. Good location, good rate, bank held etc"
                     {...field}
                   />
                 </FormControl>
@@ -176,9 +192,51 @@ export function AddPropertyForm({
                 <FormLabel>Address *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="ex. 8355 - St. 18, Durga Puri"
+                    placeholder="eg. 8355 - St. 18, Durga Puri"
                     {...field}
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex justify-between gap-2 sm:gap-6 md:flex-nowrap">
+          <FormField
+            control={form.control}
+            name="tehsil"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Tehsil</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>City</FormLabel>
+                <FormControl>
+                  <Input placeholder="eg. Ludhiana" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="state"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>State</FormLabel>
+                <FormControl>
+                  <Input placeholder="eg. Punjab" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -226,7 +284,7 @@ export function AddPropertyForm({
         </div>
 
         {/* dimensions */}
-        <div className="grid-rows-auto grid grid-cols-4 items-center justify-between gap-6">
+        <div className="grid-rows-auto grid grid-cols-2 items-center justify-between gap-2 sm:grid-cols-4 sm:gap-6">
           <FormField
             control={form.control}
             name="floors"
@@ -235,7 +293,7 @@ export function AddPropertyForm({
                 <FormLabel>Floors *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="ex. 2"
+                    placeholder="eg. 2"
                     type="number"
                     {...field}
                     onChange={(event) => field.onChange(+event.target.value)}
@@ -253,7 +311,7 @@ export function AddPropertyForm({
                 <FormLabel>Length(ft.) *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="ex. 50"
+                    placeholder="eg. 50"
                     type="number"
                     {...field}
                     onChange={(event) => field.onChange(+event.target.value)}
@@ -271,9 +329,9 @@ export function AddPropertyForm({
                 <FormLabel>Width(ft.) *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="ex. 30"
-                    type="number"
                     {...field}
+                    placeholder="eg. 30"
+                    type="number"
                     onChange={(event) => field.onChange(+event.target.value)}
                   />
                 </FormControl>
@@ -314,8 +372,24 @@ export function AddPropertyForm({
             </FormItem>
           )}
         />
-
-        <div className="flex justify-between gap-4">
+        <FormField
+          control={form.control}
+          name="manualPricing"
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-2">
+              <FormControl>
+                <Checkbox
+                  className="!m-0"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel className="!m-0">Manual Pricing</FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex justify-between gap-2 sm:gap-6">
           <FormField
             control={form.control}
             name="pricePerSqFt"
@@ -324,7 +398,7 @@ export function AddPropertyForm({
                 <FormLabel>Price(per sq ft.) *</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="ex. 2"
+                    placeholder="eg. 2"
                     type="number"
                     {...field}
                     onChange={(event) => field.onChange(+event.target.value)}
@@ -334,28 +408,25 @@ export function AddPropertyForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="calculatedPrice"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Property Price</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Length x Width x Price(sq.ft)"
-                    disabled
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {getPriceSection()}
         </div>
-        <Button type="submit" variant="default" size="lg">
-          {!isLoading && !isUpdating && "Submit"}
-          {(isLoading || isUpdating) && <DotLoader />}
-        </Button>
+        <div className="flex items-center justify-center gap-4">
+          <Button type="submit" variant="default" size="lg" className="w-48">
+            {!isLoading && "Submit"}
+            {isLoading && <DotLoader />}
+          </Button>
+          {isEditMode && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              className="w-48"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

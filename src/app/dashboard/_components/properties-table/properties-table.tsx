@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -30,16 +31,16 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import {
   type PropertyItem,
   type BrokerEntity,
-  type Category,
   type Locations,
 } from "@prisma/client";
 import { EditProperty } from "../edit-property";
+import { type CategoryWithConfig } from "~/server/types/categories.types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   locations: Locations[];
-  categories: Category[];
+  categories: CategoryWithConfig[];
   brokers: BrokerEntity[];
   properties: PropertyItem[];
 }
@@ -52,22 +53,20 @@ export function PropertiesTable<TData, TValue>({
   brokers,
   properties,
 }: DataTableProps<TData, TValue>) {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [editPropertyId, setEditPropertyId] = React.useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [editPropertyId, setEditPropertyId] = useState<string>("");
 
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      category: false,
-      length: false,
-      width: false,
-      brokerContactNumber: false,
-      floors: false,
-    });
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    category: false,
+    length: false,
+    width: false,
+    brokerContactNumber: false,
+    floors: false,
+    status: false,
+  });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -100,6 +99,22 @@ export function PropertiesTable<TData, TValue>({
     },
   });
 
+  // useEffect(() => {
+  //   async function updatePropertyTableColumnVisibility() {
+  //     const currentVisibleColumnNames = table
+  //       .getVisibleFlatColumns()
+  //       .map((item) => item.id)
+  //       .filter((item) => item !== "actions" && item !== "select");
+  //     console.log(currentVisibleColumnNames);
+  //     await updatePropertyTableColumnVisibilityById({
+  //       id: userPreference.id,
+  //       propertyTableColumns: currentVisibleColumnNames,
+  //     });
+  //   }
+  //   // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  //   updatePropertyTableColumnVisibility();
+  // }, [columnVisibility]);
+
   return (
     <div className="space-y-4">
       <DataTableToolbar
@@ -115,7 +130,11 @@ export function PropertiesTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="px-3"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -136,7 +155,7 @@ export function PropertiesTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="px-3">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -149,9 +168,12 @@ export function PropertiesTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-60 text-center"
                 >
-                  No results.
+                  <div className="py-4">
+                    No results. Try adding a new{" "}
+                    <span className="font-bold text-accent">property.</span>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
