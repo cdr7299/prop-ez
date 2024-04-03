@@ -97,11 +97,11 @@ export const propertiesRouter = createTRPCRouter({
         locationId: z.string(),
         brokerEntityId: z.string().optional(),
         pricePerSqFt: z.number(),
-        // customerPrice: z.number().optional(),
-        // soldAt: z.number().optional(),
+        manualPricing: z.boolean(),
         tehsil: z.string().optional(),
         city: z.string().optional(),
         state: z.string().optional(),
+        askingPrice: z.number().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -120,6 +120,8 @@ export const propertiesRouter = createTRPCRouter({
           tehsil: input.tehsil,
           city: input.city,
           state: input.state,
+          manualPricing: input.manualPricing,
+          askingPrice: input.askingPrice,
         },
       });
     }),
