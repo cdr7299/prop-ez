@@ -20,5 +20,5 @@ export const AddPropertyFormSchema = z.object({
   city: z.string(),
   state: z.string(),
   askingPrice: z.number().optional(),
-  manualPricing: z.boolean().optional(),
+  manualPricing: z.boolean(),
 });
