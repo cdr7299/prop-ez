@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { AddBrokerForm } from "./add-broker-form";
+import { AddBrokerForm } from "./add-broker/add-broker-form";
 import { type BrokerEntity } from "@prisma/client";
 
 export function EditBroker({
