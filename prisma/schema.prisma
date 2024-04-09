@@ -158,7 +158,7 @@ model CustomerPreference {
   createdById  String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
-  Customer     Customer @relation(fields: [customerId], references: [id])
+  Customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId   String   @unique
   minPrice     Float?
   maxPrice     Float?

@@ -25,8 +25,8 @@ import {
   TableRow,
 } from "~/components/ui/table";
 
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTablePagination } from "./brokers-table-pagination";
+import { DataTableToolbar } from "./brokers-table-toolbar";
 import { type BrokerEntity } from "@prisma/client";
 import { EditBroker } from "../edit-broker";
 
@@ -85,6 +85,9 @@ export function DataTable<TData, TValue>({
       },
       editProperty: () => {
         // find a way so we don't need to add this
+        return;
+      },
+      editCustomer: () => {
         return;
       },
     },

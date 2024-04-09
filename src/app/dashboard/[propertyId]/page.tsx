@@ -36,11 +36,7 @@ export default async function Property({
           {getAddressFromProperty(selectedProperty ?? ({} as PropertyItem))}
         </div>
       </div>
-      <PropertyDetails
-        property={selectedProperty}
-        customers={customers}
-        categories={categories}
-      />
+      <PropertyDetails property={selectedProperty} customers={customers} />
       <div className="w-full">
         <div className="flex flex-col">
           <h3 className="text-lg font-semibold">Category</h3>

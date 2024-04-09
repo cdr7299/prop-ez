@@ -24,14 +24,21 @@ export const customersRouter = createTRPCRouter({
       return customer;
     }),
   create: protectedProcedure
-    .input(z.object({ name: z.string(), phoneNumber: z.string().optional() }))
+    .input(
+      z.object({
+        name: z.string(),
+        phoneNumber: z.string().optional(),
+        email: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       console.log(input);
-      const location = await ctx.db.brokerEntity.create({
+      const location = await ctx.db.customer.create({
         data: {
           name: input.name,
           createdById: ctx.session?.user.id ?? "",
           phoneNumber: input.phoneNumber,
+          email: input.email,
         },
       });
       return location;
@@ -39,7 +46,7 @@ export const customersRouter = createTRPCRouter({
   deleteMany: protectedProcedure
     .input(z.array(z.string()))
     .mutation(({ ctx, input }) => {
-      return ctx.db.brokerEntity.deleteMany({
+      return ctx.db.customer.deleteMany({
         where: {
           id: {
             in: input,
@@ -48,11 +55,11 @@ export const customersRouter = createTRPCRouter({
       });
     }),
   delete: protectedProcedure
-    .input(z.object({ brokerId: z.string().min(1) }))
+    .input(z.object({ customerId: z.string().min(1) }))
     .mutation(({ ctx, input }) => {
-      return ctx.db.brokerEntity.delete({
+      return ctx.db.customer.delete({
         where: {
-          id: input.brokerId,
+          id: input.customerId,
         },
       });
     }),

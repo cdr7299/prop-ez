@@ -186,7 +186,7 @@ async function main() {
   const seedCustomers: Customer[] = faker.helpers.multiple(
     createRandomCustomer,
     {
-      count: 1000,
+      count: 50,
     },
   );
   const addCustomers = async () =>

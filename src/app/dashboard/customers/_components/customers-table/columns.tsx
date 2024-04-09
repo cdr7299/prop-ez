@@ -13,23 +13,27 @@ export const columns: ColumnDef<CustomerSchema>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
+      <div className="w-6">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="!m-0 flex items-center"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -73,7 +77,7 @@ export const columns: ColumnDef<CustomerSchema>[] = [
   {
     id: "actions",
     cell: ({ row, table }) => (
-      <DataTableRowActions brokerId={row.original.id} table={table} />
+      <DataTableRowActions customerId={row.original.id} table={table} />
     ),
   },
 ];

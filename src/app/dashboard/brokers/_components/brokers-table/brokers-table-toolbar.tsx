@@ -4,7 +4,7 @@ import { type Table } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "./brokers-table-view-options";
 
 // import AlertDialogDeleteProperty from "../alert-dialog-delete-property";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import { api } from "~/trpc/server";
-import { DataTable } from "./_components/brokers-table/data-table";
+import { DataTable } from "./_components/brokers-table/brokers-table";
 import { columns } from "./_components/brokers-table/columns";
 import { AddBroker } from "./_components/add-broker/add-broker";
 import Link from "next/link";
