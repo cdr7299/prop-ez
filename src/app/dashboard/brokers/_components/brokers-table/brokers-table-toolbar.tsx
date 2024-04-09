@@ -4,7 +4,7 @@ import { type Table } from "@tanstack/react-table";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableViewOptions } from "./brokers-table-view-options";
 
 // import AlertDialogDeleteProperty from "../alert-dialog-delete-property";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import AlertDialogDeleteBroker from "../alert-dialog-delete-broker";
-import { brokerSchema } from "../data/schema";
+import { brokerSchema } from "../../data/schema";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

@@ -7,7 +7,11 @@ import { Input } from "~/components/ui/input";
 import { DataTableViewOptions } from "./customers-table-view-options";
 
 import { useState } from "react";
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { customerSchema } from "../../data/schema";
+import AlertDialogDeleteCustomer from "../alert-dialog-delete-customer";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -16,24 +20,25 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
 
   const selectedRows = table.getSelectedRowModel().flatRows;
 
-  // const { mutateAsync } = api.customers.deleteMany.useMutation({
-  //   onSuccess: (params) => {
-  //     toast.success(`Succesfully deleted ${params.count} properties`);
-  //     router.refresh();
-  //     table.resetRowSelection();
-  //   },
-  // });
+  const { mutateAsync } = api.customers.deleteMany.useMutation({
+    onSuccess: (params) => {
+      toast.success(`Succesfully deleted ${params.count} customers`);
+      router.refresh();
+      table.resetRowSelection();
+    },
+  });
 
-  // const onDeleteMultiple = async () => {
-  //   const brokerIds = selectedRows.map(
-  //     (row) => brokerSchema.parse(row.original).id,
-  //   );
-  //   await mutateAsync(brokerIds);
-  // };
+  const onDeleteMultiple = async () => {
+    const customerIds = selectedRows.map(
+      (row) => customerSchema.parse(row.original).id,
+    );
+    await mutateAsync(customerIds);
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -62,13 +67,13 @@ export function DataTableToolbar<TData>({
         )}
         <DataTableViewOptions table={table} />
       </div>
-      {/* <AlertDialogDeleteBroker
+      <AlertDialogDeleteCustomer
         open={open}
         setOpen={setOpen}
         isDeleting={false}
         onDelete={onDeleteMultiple}
         count={selectedRows.length}
-      /> */}
+      />
     </div>
   );
 }

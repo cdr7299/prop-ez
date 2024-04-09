@@ -50,7 +50,7 @@ const categoryNames = [
   "Agricultural Land",
 ];
 
-const createdById = "cluaufscg0005iyvd7htm6xuu"; // IMPORTANT : add the user before the script runs
+const createdById = "clujb526b0000jidxnxjto5lb"; // IMPORTANT : add the user before the script runs
 
 async function main() {
   const seedLocations: Locations[] = [];
@@ -155,6 +155,7 @@ async function main() {
       priceSoldAt: null,
       askingPrice: null,
       manualPricing: false,
+      sellerId: null,
     };
   }
   const seedProperties: PropertyItem[] = faker.helpers.multiple(
@@ -179,12 +180,13 @@ async function main() {
       name: faker.person.fullName(),
       phoneNumber: faker.phone.number(),
       customerPreferenceId: null,
+      customerType: "both",
     };
   }
   const seedCustomers: Customer[] = faker.helpers.multiple(
     createRandomCustomer,
     {
-      count: 1000,
+      count: 50,
     },
   );
   const addCustomers = async () =>

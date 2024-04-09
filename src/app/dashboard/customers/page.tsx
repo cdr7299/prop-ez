@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { api } from "~/trpc/server";
 import { CustomersTable } from "./_components/customers-table/customers-table";
 import { columns } from "./_components/customers-table/columns";
+import { AddCustomer } from "./_components/add-customer/add-customer";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const customersWithProperties = await api.customers.list.query();
+  const customers = await api.customers.list.query();
   return (
     <div className="flex size-full max-w-screen-2xl flex-col gap-8 p-4">
       <Link
@@ -28,9 +29,13 @@ export default async function Page() {
             Here you can add, edit or modify saved customers
           </h3>
         </div>
-        {/* <AddBroker brokers={brokers} /> */}
+        <AddCustomer />
       </div>
-      <CustomersTable columns={columns} data={customersWithProperties} />
+      <CustomersTable
+        columns={columns}
+        data={customers}
+        customers={customers}
+      />
     </div>
   );
 }

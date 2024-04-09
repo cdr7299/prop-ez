@@ -117,11 +117,23 @@ export function AddBrokerForm({
             </FormItem>
           )}
         />
-
-        <Button type="submit" variant="default" size="lg">
-          {!isLoading && !isUpdating && "Submit"}
-          {(isLoading || isUpdating) && <DotLoader />}
-        </Button>
+        <div className="flex items-center justify-center gap-2">
+          <Button type="submit" variant="default" size="lg" className="w-48">
+            {!isLoading && !isUpdating && "Submit"}
+            {(isLoading || isUpdating) && <DotLoader />}
+          </Button>
+          {isEditMode && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              className="w-48"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

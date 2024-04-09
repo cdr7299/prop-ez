@@ -27,18 +27,22 @@ import {
 
 import { DataTablePagination } from "./customers-table-pagination";
 import { DataTableToolbar } from "./customers-table-toolbar";
+import { EditCustomer } from "../edit-customer";
+import { type Customer } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  customers: Customer[];
 }
 
 export function CustomersTable<TData, TValue>({
   columns,
   data,
+  customers,
 }: DataTableProps<TData, TValue>) {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [editBrokerId, setEditBrokerId] = React.useState<string>("");
+  const [editCustomerId, setEditCustomerId] = React.useState<string>("");
 
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -75,13 +79,16 @@ export function CustomersTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     meta: {
-      editBroker: (brokerId) => {
-        setOpen(true);
-        setEditBrokerId(brokerId);
+      editBroker: () => {
+        return;
       },
       editProperty: () => {
         // find a way so we don't need to add this
         return;
+      },
+      editCustomer: (customerId) => {
+        setOpen(true);
+        setEditCustomerId(customerId);
       },
     },
   });
@@ -140,12 +147,12 @@ export function CustomersTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-      {/* <EditBroker
-        editBrokerId={editBrokerId}
+      <EditCustomer
+        editCustomerId={editCustomerId}
         open={open}
         setOpen={setOpen}
-        brokers={brokers}
-      /> */}
+        customers={customers}
+      />
     </div>
   );
 }
