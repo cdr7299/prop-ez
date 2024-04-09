@@ -10,25 +10,25 @@ const SignInOptions = () => {
   };
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <h3 className="font-bold">
+      {/* <h3 className="font-bold">
         Choose your
         <span className="mx-1 text-accent">sign in </span>
         method
-      </h3>
+      </h3> */}
       <Button
         onClick={() => handleAuth("google")}
         variant="default"
-        className="w-64"
+        className="w-fit"
       >
-        Sign in with Google
+        Sign in
       </Button>
-      <Button
+      {/* <Button
         onClick={() => handleAuth("email")}
         variant="default"
         className="w-64"
       >
         Other sign in options
-      </Button>
+      </Button> */}
     </div>
   );
 };

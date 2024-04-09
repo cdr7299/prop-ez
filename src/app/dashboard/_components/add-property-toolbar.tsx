@@ -17,7 +17,7 @@ export default function AddPropertyToolbar({
   brokers: BrokerEntity[];
 }) {
   return (
-    <div className="fixed bottom-0 z-10 flex  w-full flex-wrap items-center justify-between gap-4 border-t-2 bg-white p-4 dark:bg-[#020817] md:static md:bottom-auto md:w-auto md:border-0">
+    <div className="fixed bottom-0 z-10 flex  w-full flex-wrap items-center justify-between gap-4 border-t-2 bg-white p-4 dark:bg-[#020817] sm:p-0 md:static md:bottom-auto md:w-auto md:border-0">
       <AddProperty
         categories={categories}
         locations={locations}

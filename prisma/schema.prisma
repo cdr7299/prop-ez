@@ -6,6 +6,12 @@ enum Role {
   BASIC
 }
 
+enum CustomerType {
+  buyer
+  seller
+  both
+}
+
 enum Priority {
   low
   medium
@@ -100,56 +106,68 @@ model UserPreference {
 }
 
 model PropertyItem {
-  id             String         @id @default(cuid())
-  title          String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  address        String
-  tehsil         String?
-  city           String?
-  state          String?
-  createdBy      User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  createdById    String
-  length         Float?
-  width          Float?
-  floors         Int
-  Category       Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId     String
-  priority       Priority?
-  status         PropertyStatus @default(on_market)
-  location       Locations      @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  locationId     String
-  broker         BrokerEntity?  @relation(fields: [brokerEntityId], references: [id])
-  brokerEntityId String?
-  pricePerSqFt   Float?
-  askingPrice    Float?
-  priceSoldAt    Float?
-  customers      Customer[]
-  manualPricing  Boolean        @default(false)
+  id               String         @id @default(cuid())
+  title            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  address          String
+  tehsil           String?
+  city             String?
+  state            String?
+  createdBy        User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdById      String
+  length           Float?
+  width            Float?
+  floors           Int
+  Category         Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId       String
+  priority         Priority?
+  status           PropertyStatus @default(on_market)
+  location         Locations      @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  locationId       String
+  broker           BrokerEntity?  @relation(fields: [brokerEntityId], references: [id])
+  brokerEntityId   String?
+  pricePerSqFt     Float?
+  askingPrice      Float?
+  priceSoldAt      Float?
+  interestedBuyers Customer[]     @relation("IsBuyingProperties")
+  seller           Customer?      @relation("IsSellingProperties", fields: [sellerId], references: [id])
+  sellerId         String?
+  manualPricing    Boolean        @default(false)
 }
 
 model Customer {
   id                   String              @id @default(cuid())
+  customerType         CustomerType        @default(buyer)
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @default(now()) @updatedAt
   createdBy            User                @relation(fields: [createdById], references: [id])
+  createdById          String
   name                 String
   phoneNumber          String?
   email                String?
-  PropertyItem         PropertyItem[]
+  isSellingProperties  PropertyItem[]      @relation("IsSellingProperties")
+  isBuyingProperties   PropertyItem[]      @relation("IsBuyingProperties")
   customerPreferenceId String?
   CustomerPreference   CustomerPreference?
-  createdById          String
 }
 
 model CustomerPreference {
-  id          String   @id @default(cuid())
-  createdBy   User     @relation(fields: [createdById], references: [id])
-  createdById String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  Customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  String   @unique
+  id           String   @id @default(cuid())
+  createdBy    User     @relation(fields: [createdById], references: [id])
+  createdById  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  Customer     Customer @relation(fields: [customerId], references: [id])
+  customerId   String   @unique
+  minPrice     Float?
+  maxPrice     Float?
+  minArea      Float?
+  maxArea      Float?
+  minFloors    Int?
+  pricePerSqFt Float?
+  maxLength    Float?
+  maxWidth     Float?
 }
 
 model Locations {

@@ -145,7 +145,18 @@ export const propertiesRouter = createTRPCRouter({
       },
     });
   }),
-
+  listPropertyIdWithInterestedCustomers: protectedProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .query(({ ctx, input }) => {
+      return ctx.db.propertyItem.findFirst({
+        where: {
+          id: input.id,
+        },
+        include: {
+          interestedBuyers: true,
+        },
+      });
+    }),
   avgPricePerSqFt: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.aggregate({
       _avg: { pricePerSqFt: true },

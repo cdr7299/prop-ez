@@ -410,7 +410,7 @@ export function AddPropertyForm({
           />
           {getPriceSection()}
         </div>
-        <div className="flex items-center justify-center gap-4">
+        <div className="gap- flex items-center justify-center">
           <Button type="submit" variant="default" size="lg" className="w-48">
             {!isLoading && "Submit"}
             {isLoading && <DotLoader />}

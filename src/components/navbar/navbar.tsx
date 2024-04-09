@@ -2,6 +2,8 @@ import { type Session } from "next-auth";
 import { UserNav } from "./components/user-nav";
 import { ThemeToggle } from "./components/theme-toggle";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import SignInButton from "~/app/_components/signInButton";
 
 const Navbar = ({ session }: { session: Session | null }) => {
   return (
@@ -12,6 +14,11 @@ const Navbar = ({ session }: { session: Session | null }) => {
         </Link>
         <div className="flex items-center gap-4">
           {session && <UserNav session={session} />}
+          {!session && (
+            <div className="flex basis-1/2 flex-col items-center gap-4">
+              <SignInButton />
+            </div>
+          )}
           <ThemeToggle />
         </div>
       </div>
