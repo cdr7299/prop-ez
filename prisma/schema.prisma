@@ -130,7 +130,7 @@ model PropertyItem {
   pricePerSqFt     Float?
   askingPrice      Float?
   priceSoldAt      Float?
-  interestedBuyers Customer[]     @relation("IsBuyingProperties")
+  interestedBuyers Customer[]     @relation("isInterstedInBuying")
   seller           Customer?      @relation("IsSellingProperties", fields: [sellerId], references: [id])
   sellerId         String?
   manualPricing    Boolean        @default(false)
@@ -147,7 +147,7 @@ model Customer {
   phoneNumber          String?
   email                String?
   isSellingProperties  PropertyItem[]      @relation("IsSellingProperties")
-  isBuyingProperties   PropertyItem[]      @relation("IsBuyingProperties")
+  isInterestedInBuying PropertyItem[]      @relation("isInterstedInBuying")
   customerPreferenceId String?
   CustomerPreference   CustomerPreference?
 }

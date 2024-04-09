@@ -3,6 +3,18 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const customersRouter = createTRPCRouter({
+  updateInterestedProperties: protectedProcedure
+    .input(z.object({ propertyId: z.string(), customerId: z.string() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.db.customer.update({
+        where: { id: input.customerId },
+        data: {
+          isInterestedInBuying: {
+            connect: { id: input.propertyId },
+          },
+        },
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({
@@ -76,16 +88,16 @@ export const customersRouter = createTRPCRouter({
       where: { createdBy: { id: ctx.session.user.id } },
       include: {
         isSellingProperties: true,
-        isBuyingProperties: true,
+        isInterestedInBuying: true,
       },
     });
   }),
-
-  listWithBuyingProperties: protectedProcedure.query(({ ctx }) => {
+  //very bad query
+  listWithInterestedProperties: protectedProcedure.query(({ ctx }) => {
     return ctx.db.customer.findMany({
       where: { createdBy: { id: ctx.session.user.id } },
       include: {
-        isSellingProperties: true,
+        isInterestedInBuying: true,
       },
     });
   }),

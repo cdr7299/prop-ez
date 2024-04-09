@@ -1,19 +1,11 @@
-import { type Customer } from "@prisma/client";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { PropertyStatusLabels } from "~/app/_types/properties";
 import { Button } from "~/components/ui/button";
 import { type PropertyWithInterestedBuyers } from "~/server/types/properties.types";
 export default async function PropertyDetails({
   property,
-  customers,
 }: {
   property: PropertyWithInterestedBuyers | null;
-  customers: Customer[];
 }) {
-  const sellerData = customers.find(
-    (customer) => customer.id === property?.sellerId,
-  );
-
   return (
     <div className="flex w-full flex-col justify-between gap-3 sm:h-[350px] sm:flex-row">
       <div className="relative aspect-square h-full w-full rounded-2xl bg-gray-200 dark:bg-gray-800 sm:w-2/3">
@@ -49,28 +41,6 @@ export default async function PropertyDetails({
                 maximumSignificantDigits: 6,
               }).format(Number(property?.pricePerSqFt))}
             </span>
-          </div>
-          <div className="flex items-baseline gap-1">
-            <h3 className="text-normal font-bold">Sold By: </h3>
-            <div className="font-semibold">
-              <span>
-                {sellerData ? (
-                  sellerData.name
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="font-normal">Unknown</span>
-                    <Button
-                      className="flex gap-3 px-2"
-                      size="sm"
-                      variant="outline"
-                    >
-                      <PlusCircledIcon />
-                      Add Seller
-                    </Button>
-                  </div>
-                )}
-              </span>
-            </div>
           </div>
         </div>
       </div>
