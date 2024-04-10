@@ -14,6 +14,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { PropertyStatusLabels } from "~/app/_types/properties";
+import { type PropertyStatus } from "@prisma/client";
 
 export const columns: ColumnDef<PropertyItem>[] = [
   {
@@ -162,7 +164,10 @@ export const columns: ColumnDef<PropertyItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
-    cell: ({ row }) => <div className="w-full">{row.getValue("status")}</div>,
+    cell: ({ row }) => {
+      const status = row.getValue("status") as PropertyStatus;
+      return <div className="w-full">{PropertyStatusLabels[status]}</div>;
+    },
     filterFn: (row, id, value: string) => {
       return value.includes(row.getValue(id));
     },

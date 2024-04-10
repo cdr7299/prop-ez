@@ -138,7 +138,6 @@ export const propertiesRouter = createTRPCRouter({
 
   list: protectedProcedure.query(({ ctx }) => {
     return ctx.db.propertyItem.findMany({
-      take: 1000,
       orderBy: { createdAt: "desc" },
       where: {
         createdBy: { id: ctx.session.user.id },
