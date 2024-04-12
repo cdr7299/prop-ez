@@ -1,3 +1,4 @@
+"use client";
 import { type PropertyItem, type Customer } from "@prisma/client";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Button } from "~/components/ui/button";
@@ -12,8 +13,11 @@ import {
 } from "~/components/ui/table";
 import { AddInterestedCustomerCombobox } from "./add-interested-customer-combobox";
 import { type CustomerWithInterestedProperties } from "~/server/types/customer.types";
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default async function InterestedCustomers({
+export default function InterestedCustomers({
   interestedCustomers,
   customers,
   selectedProperty,
@@ -22,6 +26,24 @@ export default async function InterestedCustomers({
   customers: CustomerWithInterestedProperties[];
   selectedProperty: PropertyItem | null;
 }) {
+  const router = useRouter();
+  const { mutateAsync: removeInterestedCustomer } =
+    api.properties.deleteInterestedCustomer.useMutation({
+      onSuccess: () => {
+        router.refresh();
+        toast.success(`Customer removed from interested list`);
+      },
+      onError: () => {
+        toast.error("Failed to remove customer from interested list");
+      },
+    });
+
+  const onClickRemoveInterestedCustomer = async (customerId: string) => {
+    await removeInterestedCustomer({
+      customerId,
+      propertyId: selectedProperty?.id ?? "",
+    });
+  };
   return (
     <div className="flex w-full flex-col gap-4">
       <h3 className="text-lg font-semibold">Interested Customers</h3>
@@ -64,7 +86,13 @@ export default async function InterestedCustomers({
                     <Button size="sm" variant="outline">
                       Send Whatsapp
                     </Button>
-                    <Button size="sm" variant="destructive">
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() =>
+                        onClickRemoveInterestedCustomer(customer.id)
+                      }
+                    >
                       <TrashIcon />
                     </Button>
                   </TableCell>

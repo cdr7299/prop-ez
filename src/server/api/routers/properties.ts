@@ -22,6 +22,44 @@ export const propertiesRouter = createTRPCRouter({
         where: { id: input.propertyId },
       });
     }),
+  addInterestedCustomer: protectedProcedure
+    .input(
+      z.object({
+        customerId: z.string().min(1),
+        propertyId: z.string().min(1),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.propertyItem.update({
+        where: { id: input.propertyId },
+        data: {
+          interestedBuyers: {
+            connect: {
+              id: input.customerId,
+            },
+          },
+        },
+      });
+    }),
+  deleteInterestedCustomer: protectedProcedure
+    .input(
+      z.object({
+        customerId: z.string().min(1),
+        propertyId: z.string().min(1),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.propertyItem.update({
+        where: { id: input.propertyId },
+        data: {
+          interestedBuyers: {
+            disconnect: {
+              id: input.customerId,
+            },
+          },
+        },
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({

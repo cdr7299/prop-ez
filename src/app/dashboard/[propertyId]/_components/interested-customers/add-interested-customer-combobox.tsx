@@ -36,15 +36,13 @@ export function AddInterestedCustomerCombobox({
 }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
-  const { mutateAsync } = api.customers.updateInterestedProperties.useMutation({
+  const { mutateAsync } = api.properties.addInterestedCustomer.useMutation({
     onError: () => {
       toast.error("Failed to add interested customer :(");
     },
-    onSuccess: async (params) => {
+    onSuccess: async () => {
       setOpen(false);
-      toast.success(
-        `Successfull added ${params.name} as an interested customer!`,
-      );
+      toast.success(`Successfully added!`);
       router.refresh();
     },
   });
