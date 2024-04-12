@@ -96,6 +96,9 @@ export function PropertiesTable<TData, TValue>({
       editBroker() {
         return;
       },
+      editCustomer() {
+        return;
+      },
     },
   });
 

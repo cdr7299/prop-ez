@@ -98,7 +98,7 @@ export default function TabsContentCustomCategories({
 
   const onAdd = async (formValues: CategoryFormSchema) => {
     await addCategoriesAsync({
-      name: formValues.name,
+      name: formValues.name.trim(),
       fillDefaultFields: formValues.fillDefaultFields,
       fillPrice: formValues.fillPrice,
       defaultLength: formValues.defaultLength,
@@ -109,7 +109,11 @@ export default function TabsContentCustomCategories({
   };
 
   const onEdit = async (formValues: CategoryFormSchema) => {
-    await updateCategory({ ...formValues, categoryId: editDataId });
+    await updateCategory({
+      ...formValues,
+      name: formValues.name.trim(),
+      categoryId: editDataId,
+    });
   };
 
   return (
