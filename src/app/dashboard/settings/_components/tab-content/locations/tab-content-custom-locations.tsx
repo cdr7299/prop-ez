@@ -95,12 +95,12 @@ export default function TabsContentCustom({
 
   const onAdd = async (formValues: { name: string }) => {
     await addLocationsAsync({
-      name: formValues.name,
+      name: formValues.name.trim(),
     });
   };
   const onUpdate = async (formValues: { name: string }) => {
     await updateLocation({
-      name: formValues.name,
+      name: formValues.name.trim(),
       locationId: editDataId,
     });
   };

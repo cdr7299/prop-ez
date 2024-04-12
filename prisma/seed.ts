@@ -50,9 +50,24 @@ const categoryNames = [
   "Agricultural Land",
 ];
 
-const createdById = "clujb526b0000jidxnxjto5lb"; // IMPORTANT : add the user before the script runs
-
-async function main() {
+async function seedUserIdWithFakeData(createdById: string) {
+  if (!createdById) {
+    console.log("No userId provided. Correct format: yarn db:seed <userId>");
+    console.log("Exiting...");
+    return;
+  }
+  const user = await prisma.user.findFirst({
+    where: {
+      id: createdById,
+    },
+  });
+  if (!user) {
+    console.log("User not found for id:", createdById);
+    console.log("Exiting...");
+    return;
+  } else {
+    console.log("Seeding data for user:", user.name);
+  }
   const seedLocations: Locations[] = [];
   const seedCategories: Category[] = [];
   const seedBrokers: BrokerEntity[] = [];
@@ -127,7 +142,7 @@ async function main() {
   const locationIds = seedLocations.map((item) => item.id);
   const categoryId = seedCategories.map((item) => item.id);
   const brokerIds = seedBrokers.map((item) => item.id);
-  const amountOfProperties = 1000;
+  const amountOfProperties = 200;
   function createRandomProperty(): PropertyItem {
     const randLoc = Math.floor(Math.random() * seedLocations.length);
     const randCat = Math.floor(Math.random() * seedCategories.length);
@@ -195,7 +210,9 @@ async function main() {
   await addCustomers();
 }
 
-main()
+const args = process.argv.slice(2);
+
+seedUserIdWithFakeData(args[0] ?? "")
   .catch((e) => {
     console.error(e);
     process.exit(1);
