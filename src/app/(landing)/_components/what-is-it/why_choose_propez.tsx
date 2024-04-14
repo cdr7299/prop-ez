@@ -8,16 +8,16 @@ export default function MainContent() {
   return (
     <>
       <h1 className="text-3xl font-bold">
-        Why choose Propez CRM for your real estate business?
+        Why choose PropEZ CRM for your real estate business?
       </h1>
       <div className="grid grid-cols-3 gap-4">
-        {data.map((item, index) => (
+        {data.map((datas) => (
           <div
-            key={index}
+            key={datas.title}
             className="rounded-lg border-black bg-zinc-400 p-5 text-center"
           >
-            <h2 className="text-2xl font-medium">{item.title}</h2>
-            <p className="mt-2 py-1 ">{item.description}</p>
+            <h2 className="text-2xl font-medium">{datas.title}</h2>
+            <p className="mt-2 py-1 ">{datas.description}</p>
           </div>
         ))}
       </div>
@@ -52,7 +52,7 @@ export default function MainContent() {
           <div className=" left-2  m-2 py-2">
             <h1 className="text-3xl font-bold">Mobile Productivity Suite</h1>
             <p className="h-4/5">
-              Maintain peak productivity on the go with the Propez Mobile
+              Maintain peak productivity on the go with the PropEZ Mobile
               Productivity Suite, enjoying a sleek mobile interface or dedicated
               apps offering seamless property search, lead management, and
               communication features from anywhere.
@@ -62,10 +62,10 @@ export default function MainContent() {
       </div>
       <h1 className=" text-3xl  font-bold">Benefits of a CRM software</h1>
       <div className="grid scroll-py-2.5  grid-cols-4 gap-4 px-64 text-center ">
-        {benefitsofcrm.map((item, index) => (
-          <div key={index} className=" border-r-2 border-gray-200 p-2">
-            <h1 className="text-xl font-bold text-sky-600">{item.title}</h1>
-            <p>{item.description}</p>
+        {benefitsofcrm.map((boc) => (
+          <div key={boc.title} className=" border-r-2 border-gray-200 p-2">
+            <h1 className="text-xl font-bold text-sky-600">{boc.title}</h1>
+            <p>{boc.description}</p>
           </div>
         ))}
       </div>
