@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 // app/prisma/seed.ts
+/* eslint-disable */
+// @ts-nocheck
 import {
   type Locations,
   PrismaClient,
@@ -37,7 +35,7 @@ const locationNames = [
 
 const categoryNames = [
   "House",
-  "Flat",
+  "Apartment",
   "Farmhouse",
   "Plot",
   "Godown",
@@ -49,6 +47,69 @@ const categoryNames = [
   "Commercial Land",
   "Agricultural Land",
 ];
+
+const titles = {
+  House: [
+    "Beautiful house with great elevation and 4BHK",
+    "Modern house with swimming pool and garden",
+    "Luxurious house in a prime location",
+  ],
+  Apartment: [
+    "Spacious apartment with stunning views",
+    "Cozy 2BHK apartment in the city center",
+    "Luxury apartment with all amenities",
+  ],
+  Farmhouse: [
+    "Serene farmhouse with lush greenery",
+    "Farmhouse with private pool and garden",
+    "Rustic farmhouse perfect for weekends",
+  ],
+  Plot: [
+    "Prime plot in a developing area",
+    "Plot with great investment potential",
+    "Corner plot with easy access to main road",
+  ],
+  Godown: [
+    "Secure godown with ample storage space",
+    "Godown in a prime industrial area",
+    "Affordable godown with easy loading access",
+  ],
+  Shop: [
+    "Shop in a bustling market area",
+    "Prime retail space with high footfall",
+    "Affordable shop in a busy locality",
+  ],
+  Mall: [
+    "Spacious mall with top brand outlets",
+    "Modern mall in a prime location",
+    "Mall with excellent facilities and parking",
+  ],
+  Warehouse: [
+    "Large warehouse with high ceilings",
+    "Warehouse with 24/7 security",
+    "Affordable warehouse in an industrial hub",
+  ],
+  Office: [
+    "Office in the heart of the city",
+    "Modern office with all amenities",
+    "Affordable office space in a prime location",
+  ],
+  "Industrial Land": [
+    "Industrial land with easy highway access",
+    "Prime industrial land with infrastructure",
+    "Affordable industrial land in a developing area",
+  ],
+  "Commercial Land": [
+    "Commercial land in a prime business district",
+    "High potential commercial land near main road",
+    "Affordable commercial land with great ROI",
+  ],
+  "Agricultural Land": [
+    "Agricultural land near highway",
+    "Fertile agricultural land with water access",
+    "Affordable agricultural land for farming",
+  ],
+};
 
 async function seedUserIdWithFakeData(createdById: string) {
   if (!createdById) {
@@ -66,11 +127,11 @@ async function seedUserIdWithFakeData(createdById: string) {
     console.log("Exiting...");
     return;
   } else {
-    console.log("Seeding data for user:", user.name);
+    console.log("Seeding data for user:", user);
   }
-  const seedLocations: Locations[] = [];
-  const seedCategories: Category[] = [];
-  const seedBrokers: BrokerEntity[] = [];
+  const seedLocations: Omit<Locations, "id">[] = [];
+  const seedCategories: Omit<Category, "id">[] = [];
+  const seedBrokers: Omit<BrokerEntity, "id">[] = [];
 
   const seedStatuses = [
     "archived",
@@ -82,8 +143,7 @@ async function seedUserIdWithFakeData(createdById: string) {
 
   const amountOfCategories = 12;
   for (let i = 0; i < amountOfCategories; i++) {
-    const categories: Category = {
-      id: faker.string.uuid(),
+    const categories: Omit<Category, "id"> = {
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
       name: categoryNames[i] ?? "",
@@ -94,14 +154,12 @@ async function seedUserIdWithFakeData(createdById: string) {
   }
 
   const addCategories = async () =>
-    await prisma.category.createMany({ data: seedCategories });
-  await addCategories();
-
+    await prisma.category.createManyAndReturn({ data: seedCategories });
+  const createdCategories = await addCategories();
   // add locations
   const amountOfLocations = 17;
   for (let i = 0; i < amountOfLocations; i++) {
-    const location: Locations = {
-      id: faker.string.uuid(),
+    const location: Omit<Locations, "id"> = {
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
       name: locationNames[i] ?? "",
@@ -112,15 +170,14 @@ async function seedUserIdWithFakeData(createdById: string) {
   }
 
   const addLocations = async () =>
-    await prisma.locations.createMany({ data: seedLocations });
+    await prisma.locations.createManyAndReturn({ data: seedLocations });
 
-  await addLocations();
+  const createdLocations = await addLocations();
 
   // add brokers
   const amountOfBrokers = 12;
   for (let i = 0; i < amountOfBrokers; i++) {
-    const broker: BrokerEntity = {
-      id: faker.string.uuid(),
+    const broker: Omit<BrokerEntity, "id"> = {
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
       name: faker.person.fullName(),
@@ -132,28 +189,30 @@ async function seedUserIdWithFakeData(createdById: string) {
   }
 
   const addBrokers = async () =>
-    await prisma.brokerEntity.createMany({
+    await prisma.brokerEntity.createManyAndReturn({
       data: seedBrokers,
     });
 
-  await addBrokers();
+  const createdBrokers = await addBrokers();
 
   // add properties
-  const locationIds = seedLocations.map((item) => item.id);
-  const categoryId = seedCategories.map((item) => item.id);
-  const brokerIds = seedBrokers.map((item) => item.id);
-  const amountOfProperties = 200;
-  function createRandomProperty(): PropertyItem {
-    const randLoc = Math.floor(Math.random() * seedLocations.length);
-    const randCat = Math.floor(Math.random() * seedCategories.length);
+  const locationIds = createdLocations.map((item) => item.id);
+
+  const categoryId = createdCategories.map((item) => item.id);
+  const brokerIds = createdBrokers.map((item) => item.id);
+  const amountOfProperties = 250;
+  function createRandomProperty(): Omit<PropertyItem, "id"> {
+    const randLocIdx = Math.floor(Math.random() * seedLocations.length);
+    const randCatIdx = Math.floor(Math.random() * seedCategories.length);
     const randBroker = Math.floor(Math.random() * seedBrokers.length);
     const randStatus = Math.floor(Math.random() * seedStatuses.length);
+    const randCatTitleIdx = Math.floor(Math.random() * 3);
+    const catTitles = titles[createdCategories[randCatIdx].name];
     return {
-      id: faker.string.uuid(),
       city: faker.location.city(),
       state: faker.location.state(),
       tehsil: faker.location.county(),
-      title: faker.word.words({ count: { min: 2, max: 4 } }),
+      title: catTitles[randCatTitleIdx],
       createdAt: faker.date.past(),
       updatedAt: faker.date.recent(),
       createdById: createdById,
@@ -161,9 +220,9 @@ async function seedUserIdWithFakeData(createdById: string) {
       width: faker.number.float({ min: 20, max: 30 }),
       floors: faker.number.int({ min: 0, max: 3 }),
       priority: "medium",
-      address: faker.location.streetAddress({ useFullAddress: true }),
-      locationId: locationIds[randLoc] ?? "",
-      categoryId: categoryId[randCat] ?? "",
+      address: faker.location.streetAddress(),
+      locationId: locationIds[randLocIdx] ?? "",
+      categoryId: categoryId[randCatIdx] ?? "",
       brokerEntityId: brokerIds[randBroker] ?? "",
       status: (seedStatuses[randStatus] as PropertyStatus) ?? "on_market",
       pricePerSqFt: faker.number.float({ min: 1000, max: 30000 }),
@@ -173,7 +232,7 @@ async function seedUserIdWithFakeData(createdById: string) {
       sellerId: null,
     };
   }
-  const seedProperties: PropertyItem[] = faker.helpers.multiple(
+  const seedProperties: Omit<PropertyItem, "id">[] = faker.helpers.multiple(
     createRandomProperty,
     {
       count: amountOfProperties,
@@ -201,7 +260,7 @@ async function seedUserIdWithFakeData(createdById: string) {
   const seedCustomers: Customer[] = faker.helpers.multiple(
     createRandomCustomer,
     {
-      count: 50,
+      count: 30,
     },
   );
   const addCustomers = async () =>
@@ -217,6 +276,6 @@ seedUserIdWithFakeData(args[0] ?? "")
     console.error(e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .finally(() => {
+    void prisma.$disconnect();
   });

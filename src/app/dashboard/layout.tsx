@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
 
 export default async function Layout({
@@ -12,8 +13,18 @@ export default async function Layout({
       {session ? (
         children
       ) : (
-        <div className="flex size-full items-center justify-center">
-          You are not authorized to view this page :(
+        <div className="mt-[4.5rem] flex size-full min-h-[calc(100vh-4.5rem)] items-center justify-center">
+          <div className="flex flex-col items-center gap-1">
+            <div className="font-bold">
+              You are not authorized to view this page.
+            </div>
+            <Link
+              className="font-bold1 mt-4 rounded bg-accent p-2 px-4 text-white"
+              href="/"
+            >
+              Go to homepage
+            </Link>
+          </div>
         </div>
       )}
     </main>
