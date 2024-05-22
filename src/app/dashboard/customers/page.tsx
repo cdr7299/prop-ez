@@ -5,6 +5,7 @@ import { api } from "~/trpc/server";
 import { CustomersTable } from "./_components/customers-table/customers-table";
 import { columns } from "./_components/customers-table/columns";
 import { AddCustomer } from "./_components/add-customer/add-customer";
+import { ImportCustomerFromGoogle } from "./_components/import-customer/import-customer";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -29,7 +30,10 @@ export default async function Page() {
             Here you can add, edit or modify saved customers
           </h3>
         </div>
-        <AddCustomer />
+        <div className="flex gap-2">
+          {/* <ImportCustomerFromGoogle /> */}
+          <AddCustomer />
+        </div>
       </div>
       <CustomersTable
         columns={columns}

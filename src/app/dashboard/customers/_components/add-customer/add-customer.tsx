@@ -39,10 +39,12 @@ export function AddCustomer() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className=" items-center gap-2">
-          <PlusCircledIcon />
-          Add Customer
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="default" className=" items-center gap-2">
+            <PlusCircledIcon />
+            Add Customer
+          </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="h-full px-0 py-4 sm:h-auto sm:max-w-[50%] sm:py-6 xl:max-w-[40%] 2xl:max-w-[30%]">
         <DialogHeader className="justify-around gap-2 !space-y-0 border-b-[1px] border-b-primary px-4 py-2 sm:border-b-0 sm:py-0">

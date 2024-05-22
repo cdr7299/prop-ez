@@ -47,7 +47,7 @@ export default function InterestedCustomers({
   return (
     <div className="flex w-full flex-col gap-4">
       <h3 className="text-lg font-semibold">Interested Customers</h3>
-      <div className="w-[30%] self-start">
+      <div className="self-start sm:w-[30%]">
         <AddInterestedCustomerCombobox
           placeholder="Search Customers to add.."
           data={customers}
