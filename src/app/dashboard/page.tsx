@@ -6,7 +6,7 @@ import { getServerAuthSession } from "~/server/auth";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
 import AddPropertyToolbar from "./_components/add-property-toolbar";
 import { getPriceFromProperty } from "./_utils/property-table.utils";
-import { Category, Locations, PropertyItem } from "@prisma/client";
+import { Category, Locations, type PropertyItem } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: "Properties",
@@ -47,11 +47,11 @@ export default async function Dashboard() {
 
   const session = await getServerAuthSession();
   return (
-    <div className="item-center flex size-full justify-center">
+    <div className="flex size-full items-center justify-center">
       <div className="flex w-full max-w-screen-2xl flex-1 flex-col space-y-8 px-4 py-8 md:flex">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
-          <div className="flex flex-col gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">
+          <div className="flex w-full flex-col items-start gap-2 md:w-auto">
+            <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
               Welcome back, {session?.user.name}
             </h2>
             <p className="text-muted-foreground">

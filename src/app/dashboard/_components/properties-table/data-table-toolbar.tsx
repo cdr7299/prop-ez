@@ -69,7 +69,7 @@ export function DataTableToolbar<TData>({
   };
 
   return (
-    <div className="flex items-start justify-between gap-y-4">
+    <div className="sticky top-[72px] z-20 flex items-start justify-between rounded-lg border bg-slate-100 px-2 py-1 dark:bg-slate-800">
       <div className="flex flex-wrap items-center gap-y-2 space-x-2 sm:gap-y-2">
         <div className="relative flex items-center">
           <MagnifyingGlassIcon className="absolute left-2 h-5 w-5 text-gray-400" />

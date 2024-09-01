@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import InterestedCustomers from "./_components/interested-customers";
 import { Separator } from "~/components/ui/separator";
 
-export default async function Property({
+export default async function Page({
   params,
 }: {
   params: { propertyId: string };

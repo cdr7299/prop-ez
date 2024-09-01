@@ -3,16 +3,12 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 
-import {
-  type PropertyItem,
-  type BrokerEntity,
-  type Locations,
-} from "@prisma/client";
+import { type BrokerEntity, type Locations } from "@prisma/client";
 import { type CategoryWithConfig } from "~/server/types/categories.types";
 import useBreakpoint from "~/hooks/useBreakpoint";
 import PropertyTableSm from "./_components/properties-table-sm";
 import PropertiesTableXL from "./_components/properties-table-xl";
-import { PropertiesFinalItem } from "../../page";
+import { type PropertiesFinalItem } from "../../page";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,7 +29,15 @@ export function PropertiesTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const breakpoint = useBreakpoint();
   if (breakpoint === "xs" || breakpoint === "sm") {
-    return <PropertyTableSm data={data} properties={properties} />;
+    return (
+      <PropertyTableSm
+        locations={locations}
+        categories={categories}
+        brokers={brokers}
+        data={data}
+        properties={properties}
+      />
+    );
   } else {
     return (
       <PropertiesTableXL
