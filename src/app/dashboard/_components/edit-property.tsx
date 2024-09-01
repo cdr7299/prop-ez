@@ -55,8 +55,8 @@ export function EditProperty({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="px-0 py-6 sm:max-w-[80%] sm:py-6 xl:max-w-[70%] 2xl:max-w-[50%]">
-        <DialogHeader className="px-4">
+      <DialogContent className="flex h-full max-h-full flex-col px-0 py-2 sm:h-auto sm:max-w-[80%] sm:py-4 xl:max-w-[70%] 2xl:max-w-[50%]">
+        <DialogHeader className="h-fit justify-around gap-2 !space-y-0 border-b-[1px] border-b-primary px-4 py-2 sm:border-b-0 sm:py-0">
           <DialogTitle>Edit Property</DialogTitle>
           <DialogDescription>Press submit to save it.</DialogDescription>
         </DialogHeader>
