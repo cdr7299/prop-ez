@@ -6,10 +6,20 @@ import { getServerAuthSession } from "~/server/auth";
 import DashboardCards from "./_components/dashboard-cards/dashboard-cards";
 import AddPropertyToolbar from "./_components/add-property-toolbar";
 import { getPriceFromProperty } from "./_utils/property-table.utils";
+import { Category, Locations, PropertyItem } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: "Properties",
   description: "All saved properties",
+};
+
+export type PropertiesFinalItem = PropertyItem & {
+  area: number;
+  price: number | null;
+  category: string;
+  location: string;
+  brokerName?: string | null;
+  brokerContactNumber?: string | null;
 };
 
 export default async function Dashboard() {
@@ -61,7 +71,7 @@ export default async function Dashboard() {
           locations={locations}
           categories={categories}
           brokers={brokers}
-          properties={properties}
+          properties={propertiesFinal}
         />
       </div>
     </div>
